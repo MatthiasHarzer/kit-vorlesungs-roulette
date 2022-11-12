@@ -91,6 +91,7 @@
 
     --date-picker-background: #1b1e27;
     --date-picker-foreground: #f7f7f7;
+    --date-input-width: 200px;
     /*--date-picker-highlight-border: var(--input-highlight-border);*/
     /*--date-picker-highlight-shadow: var(--input-highlight-shadow);*/
 }
@@ -101,18 +102,6 @@
 
 * {
     transition: background-color 0.3s ease-in-out;
-}
-
-.priority-high {
-    background-color: var(--priority-high-color);
-}
-
-.priority-mid {
-    background-color: var(--priority-mid-color);
-}
-
-.priority-low {
-    background-color: var(--priority-low-color);
 }
 
 .text-definer {
@@ -431,25 +420,6 @@ input[type="date"] {
     position: relative;
 }
 
-input[type="date"]:after {
-    content: "";
-    z-index: 10;
-    background-image: url("../dist/imgs/calendar.png");
-    background-position: center center;
-    background-color: transparent;
-    background-size: 18px;
-    background-repeat: no-repeat;
-    display: block;
-
-    /* This is the calendar icon in FontAwesome */
-    width: 18px;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    right: 6px;
-    filter: invert(0);
-    pointer-events: none;
-}
 
 input[type=date]::-webkit-inner-spin-button,
 input[type=date]::-webkit-outer-spin-button {
