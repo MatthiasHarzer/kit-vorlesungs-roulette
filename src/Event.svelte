@@ -127,8 +127,14 @@
     }
     .time-room .room{
         text-align: right;
+        /*word-wrap: break-word;*/
+        flex: 0 1 auto;
+        overflow: hidden;
+    }
+    .time-room .room *{
         word-wrap: break-word;
     }
+
     .time-room .label{
         margin: 0 10px;
         text-align: center;
