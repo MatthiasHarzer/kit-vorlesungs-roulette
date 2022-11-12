@@ -66,6 +66,9 @@
             <span class="label">Bei</span>
             <span class="value">{event.lecturer || "Unknown"}</span>
         </div>
+        <div class="type">
+            <span>{event.type}</span>
+        </div>
     </div>
 </div>
 
@@ -91,16 +94,12 @@
 
     }
     .event.selected{
-        -webkit-box-shadow:0px 0px 14px 6px rgba(255,170,0,0.9);
-        -moz-box-shadow: 0px 0px 14px 6px rgba(255,170,0,0.9);
-        box-shadow: 0px 0px 14px 6px rgba(255,170,0,0.9);
+        -webkit-box-shadow:0 0 14px 6px rgba(255,170,0,0.9);
+        -moz-box-shadow: 0 0 14px 6px rgba(255,170,0,0.9);
+        box-shadow: 0 0 14px 6px rgba(255,170,0,0.9);
     }
 
-    hr{
-        border-radius: 100%;
-        margin: 0;
-        color: darkgray;
-    }
+
 
     h4{
         margin: 0;
@@ -162,6 +161,11 @@
     .footer .lecturer .value{
         font-weight: 500;
 
+    }
+    .footer .type span{
+        color: #dedede;
+        font-weight: 500;
+        font-size: 0.9rem;
     }
 
 

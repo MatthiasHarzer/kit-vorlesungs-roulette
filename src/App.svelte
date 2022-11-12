@@ -1,9 +1,10 @@
 <script lang="ts">
 
-    import {get_events, KITEvent, VALID_TIMES} from "./api_handler";
+    import {get_events, KITEvent, KITEventsConfig, VALID_TIMES} from "./api_handler";
     import LoadingEllipsis from "./LoadingEllipsis.svelte";
     import Event from "./Event.svelte";
-    import { DateInput } from 'date-picker-svelte'
+    import ConfigPanel from "./ConfigPanel.svelte";
+    import {format_date} from "./Util/util";
 
 
     const get_nearest_time_from_now = (): string => {
@@ -16,8 +17,8 @@
             return (Math.abs(minutes_curr - minutes_now) < Math.abs(prev - minutes_now) ? minutes_curr : prev);
         }, 0);
 
-        if(minutes == 0){
-            minutes = 8*60;
+        if (minutes == 0) {
+            minutes = 8 * 60;
         }
 
         const zero_fill = (num: number): string => num < 10 ? "0" + num : num.toString();
@@ -25,30 +26,36 @@
         return `${zero_fill(Math.floor(minutes / 60))}:${zero_fill(minutes % 60)}`;
     }
 
-    const date_to_day_string = (date: Date): string => {
-        return date.toISOString().split("T")[0].split("-").reverse().join("."); // dd.mm.yyyy
-    }
+
 
     const default_time = get_nearest_time_from_now();
     let date = new Date();
 
-    if(date.getDay() == 0){
+    if (date.getDay() == 0) {
+        date = new Date(date.setDate(date.getDate() + 1));
+    } else if (date.getDay() == 6) {
         date = new Date(date.setDate(date.getDate() + 2));
-    }else if(date.getDay() == 6){
-        date = new Date(date.setDate(date.getDate() + 3));
     }
 
     // const default_date  = date_to_day_string(date);
 
     // console.log(default_time, default_date);
-    let current_time = default_time;
-    let current_day: Date = date;
+
+
+
+    let config: KITEventsConfig = {
+        day: date,
+        time: default_time,
+        types: ["v"]
+    }
 
     $:{
-        i_promise_events = get_events(date_to_day_string(current_day), current_time);
+        selected_event_index = 0;
+        i_promise_events = get_events(config);
         i_promise_events.then(events => {
             available_events = events;
-        // console.log("asd")
+            // console.log("asd")
+            selected_event_index = -1;
         });
     }
 
@@ -56,7 +63,6 @@
 
     let i_promise_events;
     let available_events: KITEvent[] = [];
-    let event_elements = {};
 
     const select_random_event = () => {
         selected_event_index = Math.floor(Math.random() * (available_events.length - 1));
@@ -64,6 +70,20 @@
     }
 
 
+
+    let config_panel_open = false;
+    const open_config_panel = () => {
+        config_panel_open = true;
+    }
+    const close_config_panel = () => {
+        config_panel_open = false;
+    }
+
+    const submit_config = (event) => {
+
+        config = event.detail;
+        close_config_panel();
+    }
 
     const p = new Promise((resolve, reject) => {
         // i_promise_events.then((events) => {
@@ -83,9 +103,24 @@
         </button>
     </div>
     <div class="content">
-        <div class="day-notice">
-            Tag: {date_to_day_string(current_day)}
+        <div class="config" on:click={open_config_panel}>
+
+            <span class="day text">
+                Tag: {format_date(config.day, "#DDD#, #D#. #M#. #YYYY#")}
+            </span>
+            <div class="right">
+                <span class="time text">
+                    Zeit: {config.time} Uhr
+                </span>
+                <button class="material" on:click|stopPropagation={open_config_panel}>
+                    <span class="material-icons">
+                        edit
+                    </span>
+                </button>
+            </div>
+
         </div>
+        <hr/>
         {#await i_promise_events}
             <div class="loading flex-center">
                 <h3>Loading</h3>
@@ -95,7 +130,8 @@
             <div class="events">
                 {#each events as event}
 
-                        <Event event={event} index={events.indexOf(event)} selected={selected_event_index==events.indexOf(event)} />
+                    <Event event={event} index={events.indexOf(event)}
+                           selected={selected_event_index===events.indexOf(event)}/>
 
                 {/each}
             </div>
@@ -103,22 +139,10 @@
             <div class="error">{error}</div>
         {/await}
     </div>
-    <div class="footer-nav">
 
-<!--        <button class="clear day">-->
-<!--            Tag-->
-<!--            <DateInput bind:value={date} />-->
-
-<!--        </button>-->
-        <div class="time">
-            <label for="time">Zeit</label>
-            <select name="time" id="time" bind:value={current_time} class="dark-select">
-                {#each VALID_TIMES as time}
-                    <option value={time}>{time}</option>
-                {/each}
-            </select>
-        </div>
-    </div>
+    {#if config_panel_open}
+        <ConfigPanel on:close={close_config_panel} on:submit={submit_config} config={{...config}} />
+    {/if}
 
 </main>
 
@@ -143,11 +167,35 @@
         overflow: auto;
     }
 
-    .day-notice{
+    .config .text {
         text-align: center;
-        font-size: 1.5em;
+        font-size: 1.1em;
         margin: 0.2rem 0;
-        color: #c5c5c5;
+        color: #f6f6f6;
+    }
+
+    .config {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem;
+        background-color: #1e1e1e;
+        border-radius: 0.5rem;
+        margin: 0.5rem;
+    }
+
+    .config .right {
+        display: flex;
+        align-items: center;
+    }
+
+    .config .right > * {
+        margin: 0 0.5rem;
+    }
+
+    hr {
+        width: 90%;
+        margin: 0 auto;
     }
 
     .header {
@@ -170,9 +218,12 @@
         line-height: 54px;
         font-size: 24px;
         font-weight: 550;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
-    .loading{
+    .loading {
         flex-direction: column;
     }
 
@@ -182,7 +233,7 @@
 
     }
 
-    .events{
+    .events {
         height: 100%;
         width: 100%;
 
@@ -195,28 +246,5 @@
         grid-auto-rows: 1fr;
         /*grid-template-rows: minmax(100px, auto);*/
         /*grid-auto-rows: 5px;*/
-    }
-
-    .footer-nav{
-        padding-top: 10px;
-        border-top-right-radius: 10px;
-        border-top-left-radius: 10px;
-        background-color: var(--dark-bg-color-dark-dark-m);
-    }
-    .footer-nav .time{
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-    }
-    .footer-nav .time label{
-        margin: 0;
-        padding: 0 20px;
-        line-height: 54px;
-        font-weight: 500;
-        font-size: 1.3rem;
-    }
-    .footer-nav .time select{
-        /*padding-right: 15px;*/
-        width: 80%;
     }
 </style>

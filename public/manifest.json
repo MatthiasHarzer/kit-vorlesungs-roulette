@@ -1,6 +1,6 @@
 {
     "name": "KIT Vorlesungs Roulette",
-    "short_name": "kit-vorlesungs-roulette",
+    "short_name": "KIT Vorlesungs Roulette",
     "start_url": "/",
     "icons": [
         {
@@ -18,6 +18,6 @@
     ],
     "theme_color": "#000000",
     "background_color": "#FFFFFF",
-    "display": "fullscreen",
+    "display": "standalone",
     "orientation": "portrait"
 }

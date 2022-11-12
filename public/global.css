@@ -58,7 +58,7 @@
 }
 
 :root {
-    --click-color: rgb(77, 152, 218);
+    --click-color: rgb(0, 139, 253);
     --greyed: rgb(179, 179, 179);
     --dark-greyed: rgb(83, 83, 83);
     --very-light-grey: rgb(214, 214, 214);
@@ -88,6 +88,11 @@
     --selected-color: #00a4ff;
 
     --dark-primary: #083f72;
+
+    --date-picker-background: #1b1e27;
+    --date-picker-foreground: #f7f7f7;
+    /*--date-picker-highlight-border: var(--input-highlight-border);*/
+    /*--date-picker-highlight-shadow: var(--input-highlight-shadow);*/
 }
 
 *:focus {
@@ -120,13 +125,18 @@ html, body {
     width: 100%;
     height: 100%;
 }
+hr{
+    border-radius: 100%;
+    margin: 0;
+    color: darkgray;
+}
 
 body {
     color: white;
     margin: 0;
     background-color: var(--dark-background);
     box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-family: Bahnschrift, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 
 }
 
@@ -294,10 +304,12 @@ button:focus {
 
 .blur-background > .dialog {
     display: flex;
-    background-color: #3b3b3b;
+    background-color: #2a2a2a;
     flex-flow: column;
-    min-width: 500px;
+    /*min-width: 500px;*/
     min-height: 200px;
+    min-width: min(500px, 90vw);
+    max-width: 90vw;
     border-radius: 5px;
     align-items: center;
     position: relative;
@@ -328,8 +340,6 @@ main.light .blur-background {
 
 .dialog-wrapper.responsive {
     height: auto;
-
-
 }
 
 .content h3, .dialog h3 {
