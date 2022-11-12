@@ -41,15 +41,13 @@
         date = new Date(date.setDate(date.getDate() + 2));
     }
 
-    // const default_date  = date_to_day_string(date);
-
-    // console.log(default_time, default_date);
-
+    const cached_types_raw = localStorage.getItem("types");
+    const cached_types = cached_types_raw ? JSON.parse(cached_types_raw) : ["v"];
 
     let config: KITEventsConfig = {
         day: date,
         time: default_time,
-        types: ["v"]
+        types: cached_types
     }
 
     $:{
@@ -84,6 +82,7 @@
     const submit_config = (event) => {
 
         config = event.detail;
+        localStorage.setItem("types", JSON.stringify(config.types));
         close_config_panel();
     }
 
