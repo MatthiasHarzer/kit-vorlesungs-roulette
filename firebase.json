@@ -1,7 +1,7 @@
 {
   "hosting": {
     "site": "kit-roulette",
-    "public": "public",
+    "public": "dist",
     "ignore": [
       "firebase.json",
       "**/.*",
