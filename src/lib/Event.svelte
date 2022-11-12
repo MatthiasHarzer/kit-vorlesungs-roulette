@@ -21,7 +21,7 @@
         "#d0b369",
     ];
 
-    // index = Math.round(Math.random() * material_color_pallet.length);
+    index = Math.round(Math.random() * material_color_pallet.length);
 
     const color = material_color_pallet[index % material_color_pallet.length];
 
