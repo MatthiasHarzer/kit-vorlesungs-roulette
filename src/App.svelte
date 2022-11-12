@@ -1,10 +1,11 @@
 <script lang="ts">
 
-    import {get_events, KITEvent, KITEventsConfig, VALID_TIMES} from "./api_handler";
-    import LoadingEllipsis from "./LoadingEllipsis.svelte";
-    import Event from "./Event.svelte";
-    import ConfigPanel from "./ConfigPanel.svelte";
-    import {format_date} from "./Util/util";
+    import LoadingEllipsis from "./lib/LoadingEllipsis.svelte";
+    import Event from "./lib/Event.svelte";
+    import ConfigPanel from "./lib/ConfigPanel.svelte";
+    import {format_date} from "./lib/Util/util";
+    import {get_events, VALID_TIMES} from "./lib/api_handler";
+    import type {KITEvent, KITEventsConfig} from "./lib/types";
 
 
     const get_nearest_time_from_now = (): string => {

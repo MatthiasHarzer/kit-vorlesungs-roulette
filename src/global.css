@@ -1,0 +1,663 @@
+@font-face {
+    font-family: Karla;
+    src: url(assets/Karla.ttf);
+}
+
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Material Icons'),
+    local('MaterialIcons-Regular'),
+    url(assets/icon_font/MaterialIcons-Regular.ttf) format('truetype');
+}
+@font-face {
+    font-family: 'Material Icons Outlined';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Material Icons'),
+    local('MaterialIcons-Regular'),
+    url(assets/icon_font/MaterialIconsOutlined-Regular.otf) format('truetype');
+}
+
+.material-icons, .material-icons-outlined {
+    /*noinspection CssNoGenericFontName*/
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px; /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+    color: white;
+}
+
+.material-icons-outlined {
+    /*noinspection CssNoGenericFontName*/
+    font-family: 'Material Icons Outlined' !important;
+
+    font-variation-settings: 'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 48 !important;
+}
+
+:root {
+    --click-color: rgb(0, 139, 253);
+    --greyed: rgb(179, 179, 179);
+    --dark-greyed: rgb(83, 83, 83);
+    --very-light-grey: rgb(214, 214, 214);
+
+    /*--dark-bg-color-light: rgb(70, 70, 70);*/
+    --dark-background: rgb(54, 54, 54);
+    --dark-surface: #2f2f2f;
+    --dark-surface-dp1: #3d3d3d;
+    --dark-bg-color-dark-dark: #232323;
+    --dark-bg-color-dark-dark-m: #202020;
+    --dark-bg-color-light: rgb(75, 75, 75);
+
+    --dark-list-accent-color: rgb(49, 49, 49);
+    --dark-blur-color: rgba(15, 15, 15, 0.582);
+
+    --light-bg-color: rgb(223, 223, 223);
+    --light-list-accent-color: rgb(214, 214, 214);
+    --light-blur-color: rgba(104, 104, 104, 0.582);
+
+
+    --priority-high-color: #0928c9;
+    /*--priority-mid-color: #063d3d;*/
+    /*--priority-low-color: #063606;*/
+
+    --theme-color-dark: #083f72;
+    --theme-color: #0479a6;
+    --selected-color: #00a4ff;
+
+    --dark-primary: #083f72;
+
+    --date-picker-background: #1b1e27;
+    --date-picker-foreground: #f7f7f7;
+    /*--date-picker-highlight-border: var(--input-highlight-border);*/
+    /*--date-picker-highlight-shadow: var(--input-highlight-shadow);*/
+}
+
+*:focus {
+    outline: none;
+}
+
+* {
+    transition: background-color 0.3s ease-in-out;
+}
+
+.priority-high {
+    background-color: var(--priority-high-color);
+}
+
+.priority-mid {
+    background-color: var(--priority-mid-color);
+}
+
+.priority-low {
+    background-color: var(--priority-low-color);
+}
+
+.text-definer {
+    transition: color 0.3s ease-in-out;
+}
+
+
+html, body {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+hr{
+    border-radius: 100%;
+    margin: 0;
+    color: darkgray;
+}
+
+body {
+    color: white;
+    margin: 0;
+    background-color: var(--dark-background);
+    box-sizing: border-box;
+    font-family: Bahnschrift, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+
+}
+
+/*For disabling scroll-to-refresh on mobile*/
+body,
+.body-wrapper {
+    /* Break the flow */
+    position: absolute;
+    top: 0;
+
+    /* Give them all the available space */
+    width: 100%;
+    height: 100%;
+
+    /* Remove the margins if any */
+    margin: 0;
+
+    /* Allow them to scroll down the document */
+    overflow-y: hidden;
+}
+
+/*For disabling scroll-to-refresh on mobile*/
+body {
+    /* Sending body at the bottom of the stack */
+    z-index: 1;
+}
+
+.body-wrapper {
+    /* Making the wrapper stack above the body */
+    z-index: 2;
+}
+
+a {
+    color: rgb(0, 100, 200);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a:visited {
+    color: rgb(0, 80, 160);
+}
+
+label {
+    display: block;
+}
+
+input, button, select, textarea {
+    font-family: inherit;
+    font-size: inherit;
+    -webkit-padding: 0.4em 0;
+    padding: 0.4em;
+    margin: 0 0 0.5em 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+}
+
+input:disabled {
+    color: #ccc;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+select.clean {
+
+    -moz-appearance: none; /* Firefox */
+    -webkit-appearance: none; /* Safari and Chrome */
+    appearance: none;
+
+}
+
+button {
+    color: #333;
+    background-color: #f4f4f4;
+    outline: none;
+    cursor: pointer;
+}
+
+button, button:focus, button:active, button:target {
+    -webkit-tap-highlight-color: transparent;
+}
+
+button span {
+    user-select: none;
+}
+
+button:disabled {
+    color: #999;
+}
+
+
+button:focus {
+    border-color: #666;
+}
+
+::-webkit-scrollbar {
+    /*width: 0;*/
+    /*height: 0;*/
+    /*background: transparent;*/
+    /*display: none;*/
+    /*background-color: #696969;*/
+}
+
+::-webkit-scrollbar-thumb {
+    /*background: darkgray;*/
+    /*border-radius: 100px;*/
+    /*width: 0;*/
+    /*height: 0;*/
+}
+
+::-webkit-scrollbar-corner {
+    /*height: 0;*/
+    /*background: transparent;*/
+}
+
+* {
+    scrollbar-width: none; /* Firefox */
+}
+
+.hidden {
+    display: none;
+    width: 0 !important;
+    height: 0 !important;
+    position: fixed;
+    top: -100vh;
+    z-index: -1;
+}
+
+.box-shadow {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.noscroll {
+    overflow: hidden;
+    overflow-x: hidden !important;
+}
+
+.blur-background {
+    z-index: 1;
+    position: absolute;
+    width: 100vw;
+    height: 100%;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    background-color: var(--dark-blur-color);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
+}
+
+.blur-background > .dialog {
+    display: flex;
+    background-color: #2a2a2a;
+    flex-flow: column;
+    /*min-width: 500px;*/
+    min-height: 200px;
+    min-width: min(500px, 90vw);
+    max-width: 90vw;
+    border-radius: 5px;
+    align-items: center;
+    position: relative;
+}
+
+
+main.light .blur-background {
+    background-color: var(--light-blur-color);
+}
+
+.dialog-wrapper {
+    position: relative;
+    padding: 0;
+    background-color: var(--dark-background);
+    width: 90%;
+    height: 90%;
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 10px;
+    display: flex;
+    flex-flow: column;
+
+    /*justify-items: center;*/
+    /*justify-content: center;*/
+    align-items: center;
+    /*align-content: center;*/
+}
+
+.dialog-wrapper.responsive {
+    height: auto;
+}
+
+.content h3, .dialog h3 {
+
+    font-size: 22px;
+    font-weight: 400;
+    text-align: center;
+    margin-bottom: 0;
+
+}
+
+main.light .dialog-wrapper {
+    background-color: var(--light-bg-color);
+}
+
+.dialog-wrapper .content {
+    margin-top: 15px;
+    width: 90%;
+    height: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.dialog-wrapper .content.centered {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}
+
+.dialog-wrapper .close-btn-wrapper {
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin-top: 10px;
+    margin-left: 15px;
+    float: right;
+}
+
+.dark-select {
+    margin: 0;
+    color: white;
+    background-color: var(--dark-greyed);
+    width: 100%;
+}
+
+.scroll-select-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--greyed);
+    background-color: var(--dark-bg-color-dark-dark);
+    border: 1px solid var(--dark-background);
+    padding: 8px 15px;
+    border-radius: 9px;
+    white-space: nowrap;
+    margin: 0 3px;
+}
+
+.clear {
+    margin: 0;
+    background-color: transparent;
+    border: none;
+    color: inherit;
+}
+
+button.clear-btn {
+    margin: 0;
+    background-color: transparent;
+    border: none;
+
+
+}
+
+button.clear-btn:active {
+    background-color: rgba(200, 200, 200, 0.1);
+}
+
+/* Unified date input */
+input[type="date"]::-webkit-calendar-picker-indicator {
+
+    color: transparent;
+    background: none;
+    z-index: 1;
+}
+
+input[type="date"] {
+    position: relative;
+}
+
+input[type="date"]:after {
+    content: "";
+    z-index: 10;
+    background-image: url("../dist/imgs/calendar.png");
+    background-position: center center;
+    background-color: transparent;
+    background-size: 18px;
+    background-repeat: no-repeat;
+    display: block;
+
+    /* This is the calendar icon in FontAwesome */
+    width: 18px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 6px;
+    filter: invert(0);
+    pointer-events: none;
+}
+
+input[type=date]::-webkit-inner-spin-button,
+input[type=date]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+}
+
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+button.material {
+    padding: 5px;
+    height: fit-content;
+    width: fit-content;
+    border-radius: 1000px;
+    border: none;
+    background-color: transparent;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+button.material.text-button {
+    color: white;
+}
+
+button.material:before, button.material:after {
+    content: "";
+    display: block;
+    width: 0;
+    height: 0;
+    background-color: var(--dark-greyed);
+    border-radius: 1000px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /*padding: 5px;*/
+    opacity: 1;
+    transition: all 0.2s;
+}
+
+button.material:after {
+    opacity: 0;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+}
+
+button.material.text-button:before, button.material.text-button:after {
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: inherit;
+}
+
+button.material:not(.no-effect):not(.text-button):active:before,
+button.material:not(.no-effect):not(.text-button):hover:before {
+    opacity: 1;
+    width: 110%;
+    height: 110%;
+}
+
+button.material.text-button:not(.no-effect):active:before {
+    opacity: 1;
+    width: 100%;
+    height: 100%;
+    transition: all 0.2s;
+}
+
+button.material.text-button:not(.no-effect):hover:after {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+button.material > * {
+    position: relative;
+}
+
+
+/*Material icons*/
+/*.material-icons, .material-icons-outlined {*/
+/*    color: rgb(211, 211, 211);*/
+/*    background-color: transparent;*/
+/*    padding: 2px;*/
+/*    border-radius: 50%;*/
+/*}*/
+
+
+/*.material-icons.md-inactive { color: rgba(141, 141, 141, 0.26); }*/
+
+.md-18 {
+    font-size: 18px;
+}
+
+.md-24 {
+    font-size: 24px;
+}
+
+.md-28 {
+    font-size: 28px;
+}
+
+.md-36 {
+    font-size: 36px;
+}
+
+.md-48 {
+    font-size: 48px;
+}
+
+.md-56 {
+    font-size: 56px;
+}
+
+span.material-icons:active, span.material-icons-outlined:active {
+
+}
+
+img {
+    width: 24px;
+    height: 24px;
+}
+
+.no-transition * {
+    transition: none !important;
+}
+
+
+.fancy-input {
+    position: relative;
+}
+
+.fancy-input input {
+    width: 100%;
+    color: white;
+    background-color: transparent;
+    border: none;
+    font-size: 17px;
+    border-radius: 0;
+    padding-bottom: 1px;
+    margin-bottom: 0;
+
+}
+
+/* .input label {
+    color: var(--greyed);
+} */
+.fancy-input label {
+    position: absolute;
+    top: 7px;
+    left: 5px;
+    transition: all 0.1s ease;
+    color: var(--greyed);
+    cursor: text;
+}
+
+.fancy-input input:focus ~ label,
+.fancy-input input:valid ~ label,
+.fancy-input label.active {
+    color: white;
+    top: -17px;
+    left: 0;
+    content: "Name";
+}
+
+/*A combined search and add user field*/
+.search-or-add-user {
+    width: 100%;
+    display: flex;
+    flex-flow: row;
+    height: 40px;
+
+    position: relative;
+}
+
+.search-or-add-user input {
+    flex: 1;
+    height: 100%;
+    color: white;
+    font-size: 20px;
+    padding: 5px 5px 5px 15px;
+    background-color: #575757;
+    border-radius: 5px;
+}
+
+.search-or-add-user .spacer {
+    height: 100%;
+    margin: 0 5px;
+}
+
+.search-or-add-user button {
+    background-color: #43b643;
+    color: white;
+    border-radius: 5px;
+    border: none;
+    height: 100%;
+}
+
+
+.header button.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
