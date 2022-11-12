@@ -9,6 +9,8 @@
 
     import circled from "./assets/imgs/circled.png"
     import arrow from "./assets/imgs/arrow.png"
+    import svelte_icon from "./assets/imgs/svelte.png"
+    import github_icon from "./assets/imgs/github.png"
 
     const get_nearest_time_from_now = (): string => {
         const now = Date.now();
@@ -30,7 +32,6 @@
     }
 
 
-
     const default_time = get_nearest_time_from_now();
     let date = new Date();
 
@@ -43,7 +44,6 @@
     // const default_date  = date_to_day_string(date);
 
     // console.log(default_time, default_date);
-
 
 
     let config: KITEventsConfig = {
@@ -71,7 +71,6 @@
         selected_event_index = Math.floor(Math.random() * (available_events.length - 1));
 
     }
-
 
 
     let config_panel_open = false;
@@ -146,26 +145,42 @@
             </div>
         {:then events}
             {#if events.length > 0}
-            <div class="events">
-                {#each events as event}
+                <div class="events">
+                    {#each events as event}
 
-                    <Event event={event} index={events.indexOf(event)}
-                           selected={selected_event_index===events.indexOf(event)}/>
+                        <Event event={event} index={events.indexOf(event)}
+                               selected={selected_event_index===events.indexOf(event)}/>
 
-                {/each}
-            </div>
-                {:else}
+                    {/each}
+                </div>
+            {:else}
                 <div class="no-events flex-center">
                     <h3>Keine Vorlesungen gefunden</h3>
                 </div>
-                {/if}
+            {/if}
         {:catch error}
             <div class="error">{error}</div>
         {/await}
+        <div class="footer">
+            <div class="made-by">
+                <span>
+                    Made by <a href="https://matthiasharzer.de" target="_blank">Matthias Harzer</a> with <a href="https://svelte.dev" target="_blank"><img
+                        src={svelte_icon} alt="Svelte" class="svelte"></a>
+                </span>
+            </div>
+            <div class="github">
+
+                <a href="https://github.com/MatthiasHarzer/kit-vorlesungs-roulette" target="_blank">
+                    This project is open source
+                    <img src={github_icon} alt="Github">
+                </a>
+
+            </div>
+        </div>
     </div>
 
     {#if config_panel_open}
-        <ConfigPanel on:close={close_config_panel} on:submit={submit_config} config={{...config}} />
+        <ConfigPanel on:close={close_config_panel} on:submit={submit_config} config={{...config}}/>
     {/if}
 
 </main>
@@ -185,7 +200,10 @@
     }
 
     .content {
+        position: relative;
         flex: 1;
+        display: flex;
+        flex-direction: column;
         /*height: min-content;*/
         /*max-height: calc(100% - 54px);*/
         overflow: auto;
@@ -199,11 +217,13 @@
         display: flex;
         align-items: center;
     }
-    .config .text .key{
+
+    .config .text .key {
         font-weight: normal;
         margin-right: 0.5rem;
     }
-    .config .text .value{
+
+    .config .text .value {
         font-weight: bold;
     }
 
@@ -244,11 +264,12 @@
         padding: 0 1rem;
     }
 
-    .randomize{
+    .randomize {
         display: flex;
         align-items: center;
     }
-    .randomize img.arrow{
+
+    .randomize img.arrow {
         /*width: 1.5rem;*/
         position: relative;
         top: 0.4rem;
@@ -256,11 +277,13 @@
         height: 1.9rem;
         margin-right: 0.5rem;
     }
-    .randomize-btn{
+
+    .randomize-btn {
         position: relative;
 
     }
-    .randomize-btn img{
+
+    .randomize-btn img {
         position: absolute;
         /*top: -0.5rem;*/
         /*left: -0.5rem;*/
@@ -298,7 +321,7 @@
     }
 
     .events {
-        height: 100%;
+        /*height: 100%;*/
         width: 100%;
 
         position: relative;
@@ -310,5 +333,47 @@
         grid-auto-rows: 1fr;
         /*grid-template-rows: minmax(100px, auto);*/
         /*grid-auto-rows: 5px;*/
+    }
+
+    .footer {
+        border-top: 1px solid grey;
+        padding: 0.5rem;
+        /*position: fixed;*/
+        bottom: 0;
+        margin-top: auto;
+        color: #b2b2b2;
+        /*display: inline-flex;*/
+        /*flex-direction: column;*/
+        font-size: 0.9rem;
+        justify-content: space-between;
+
+    }
+    .footer > *{
+        /*margin: 0 0.5rem;*/
+        display: block;
+        flex-direction: column;
+        align-items: center;
+        float: left;
+    }
+    .footer div > *{
+        display: flex;
+        align-items: center;
+
+    }
+    .footer img{
+        height: 1.2rem;
+        width: auto;
+        margin-left: 0.5rem;
+    }
+    .footer img.svelte{
+        margin-left: 0.1rem;
+    }
+    .footer a{
+        color: white;
+        margin: 0 3px;
+    }
+    .footer .github{
+        float: right;
+        margin-left: 15px;
     }
 </style>
