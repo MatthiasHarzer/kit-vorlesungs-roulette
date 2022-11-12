@@ -7,6 +7,8 @@
     import {get_events, VALID_TIMES} from "./lib/api_handler";
     import type {KITEvent, KITEventsConfig} from "./lib/types";
 
+    import circled from "./assets/imgs/circled.png"
+    import arrow from "./assets/imgs/arrow.png"
 
     const get_nearest_time_from_now = (): string => {
         const now = Date.now();
@@ -97,11 +99,15 @@
 
     <div class="header">
         <span class="title">KIT Vorlesungs Roulette</span>
-        <button class="material" on:click={select_random_event}>
-            <span class="material-icons-outlined">
-                casino
-            </span>
-        </button>
+        <div class="randomize">
+            <img src={arrow} alt="->" class="arrow"/>
+            <button class="material randomize-btn" on:click={select_random_event}>
+                <img src={circled} alt="">
+                <span class="material-icons-outlined">
+                    casino
+                </span>
+            </button>
+        </div>
     </div>
     <div class="content">
         <div class="config" on:click={open_config_panel}>
@@ -139,6 +145,7 @@
                 <LoadingEllipsis/>
             </div>
         {:then events}
+            {#if events.length > 0}
             <div class="events">
                 {#each events as event}
 
@@ -147,6 +154,11 @@
 
                 {/each}
             </div>
+                {:else}
+                <div class="no-events flex-center">
+                    <h3>Keine Vorlesungen gefunden</h3>
+                </div>
+                {/if}
         {:catch error}
             <div class="error">{error}</div>
         {/await}
@@ -231,6 +243,37 @@
         justify-content: space-between;
         padding: 0 1rem;
     }
+
+    .randomize{
+        display: flex;
+        align-items: center;
+    }
+    .randomize img.arrow{
+        /*width: 1.5rem;*/
+        position: relative;
+        top: 0.4rem;
+        width: auto;
+        height: 1.9rem;
+        margin-right: 0.5rem;
+    }
+    .randomize-btn{
+        position: relative;
+
+    }
+    .randomize-btn img{
+        position: absolute;
+        /*top: -0.5rem;*/
+        /*left: -0.5rem;*/
+        width: auto;
+        height: 120%;
+        transform: rotate(-45deg);
+        object-fit: cover;
+        z-index: 1;
+    }
+
+    /*.randomize-btn span{*/
+    /*    background-color: transparent;*/
+    /*}*/
 
     .header span.title {
         margin: 0;
