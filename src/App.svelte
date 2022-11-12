@@ -106,13 +106,24 @@
     <div class="content">
         <div class="config" on:click={open_config_panel}>
 
-            <span class="day text">
-                Tag: {format_date(config.day, "#DDD#, #D#. #M#. #YYYY#")}
-            </span>
-            <div class="right">
-                <span class="time text">
-                    Zeit: {config.time} Uhr
+            <div class="day text">
+                <span class="key">
+                    Tag:
                 </span>
+                <span class="value">
+                    {format_date(config.day, "#DDD#, #D#. #M#. #YYYY#")}
+                </span>
+            </div>
+            <div class="right">
+                <div class="time text">
+                    <span class="key">
+                        Zeit:
+                    </span>
+                    <span class="value">
+                        {config.time} Uhr
+                    </span>
+
+                </div>
                 <button class="material" on:click|stopPropagation={open_config_panel}>
                     <span class="material-icons">
                         edit
@@ -173,6 +184,15 @@
         font-size: 1.1em;
         margin: 0.2rem 0;
         color: #f6f6f6;
+        display: flex;
+        align-items: center;
+    }
+    .config .text .key{
+        font-weight: normal;
+        margin-right: 0.5rem;
+    }
+    .config .text .value{
+        font-weight: bold;
     }
 
     .config {

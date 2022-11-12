@@ -122,7 +122,7 @@
     .item.type .value label{
         flex: 1 0 auto;
         display: inline-block;
-        padding: 2px 10px;
+        padding: 5px 10px;
         margin: 2px 2px;
         /*border-radius: 0.5rem;*/
         /*margin: 0.5rem 0;*/

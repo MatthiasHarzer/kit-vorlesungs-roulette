@@ -91,6 +91,7 @@
 
     --date-picker-background: #1b1e27;
     --date-picker-foreground: #f7f7f7;
+    --date-input-width: 200px;
     /*--date-picker-highlight-border: var(--input-highlight-border);*/
     /*--date-picker-highlight-shadow: var(--input-highlight-shadow);*/
 }
