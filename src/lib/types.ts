@@ -1,3 +1,10 @@
+export interface KITRoom{
+    name: string,
+    gguid: string,
+    cms_map_link: string,
+    google_maps_link: string,
+}
+
 export interface KITEvent {
     id: string,
     title: string,
@@ -6,8 +13,7 @@ export interface KITEvent {
     format: string,
     link: string,
     time: string,
-    room: string,
-    room_link: string,
+    room: KITRoom,
 }
 
 export interface KITEventsConfig{
@@ -15,3 +21,4 @@ export interface KITEventsConfig{
     time: string,
     types: string[],
 }
+

@@ -50,6 +50,11 @@
         types: cached_types
     }
 
+    const resets_indexes = () => {
+        available_indexes = available_events.map((_, i) => i);
+        remaining_indexes = [...available_indexes];
+    }
+
     $:{
         selected_event_index = 0;
         i_promise_events = get_events(config);
@@ -57,6 +62,9 @@
             available_events = events;
             // console.log("asd")
             selected_event_index = -1;
+
+
+            resets_indexes(); // Needs to be a method call to prevent svelte from calling this block every time the array is modified
         });
     }
 
@@ -64,10 +72,17 @@
 
     let i_promise_events;
     let available_events: KITEvent[] = [];
+    let available_indexes: number[] = [];
+    let remaining_indexes: number[] = [];
 
     const select_random_event = () => {
-        selected_event_index = Math.floor(Math.random() * (available_events.length - 1));
+        // Selects a random event from the available events (without duplicates)
 
+        if (remaining_indexes.length == 0) {
+            remaining_indexes = [...available_indexes];
+        }
+
+        selected_event_index = remaining_indexes.splice(Math.floor(Math.random() * remaining_indexes.length), 1)[0];
     }
 
 
@@ -163,7 +178,8 @@
         <div class="footer">
             <div class="made-by">
                 <span>
-                    Made by <a href="https://matthiasharzer.de" target="_blank">Matthias Harzer</a> with <a href="https://svelte.dev" target="_blank"><img
+                    Made by <a href="https://matthiasharzer.de" target="_blank">Matthias Harzer</a> with <a
+                        href="https://svelte.dev" target="_blank"><img
                         src={svelte_icon} alt="Svelte" class="svelte"></a>
                 </span>
             </div>
@@ -347,31 +363,37 @@
         justify-content: space-between;
 
     }
-    .footer > *{
+
+    .footer > * {
         /*margin: 0 0.5rem;*/
         display: block;
         flex-direction: column;
         align-items: center;
         float: left;
     }
-    .footer div > *{
+
+    .footer div > * {
         display: flex;
         align-items: center;
 
     }
-    .footer img{
+
+    .footer img {
         height: 1.2rem;
         width: auto;
         margin-left: 0.5rem;
     }
-    .footer img.svelte{
+
+    .footer img.svelte {
         margin-left: 0.1rem;
     }
-    .footer a{
+
+    .footer a {
         color: white;
         margin: 0 3px;
     }
-    .footer .github{
+
+    .footer .github {
         float: right;
         margin-left: 15px;
     }

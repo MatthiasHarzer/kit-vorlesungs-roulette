@@ -12,13 +12,13 @@
     const material_color_pallet = [
         "#c76666",
         "#d77e58",
-        "#9f9a51",
+        "#53afaf",
         "#71ad71",
         "#6196d3",
         "#9d7fbe",
         "#a371bb",
         "#cc7b9c",
-        "#d0b369",
+        "#518f48",
     ];
 
     index = Math.round(Math.random() * material_color_pallet.length);
@@ -54,9 +54,9 @@
         <span class="time">{event.time}</span>
         <span class="label">in Room: </span>
         <span class="room">
-            {#if event.room}
-                <a href="{event.room_link}" target="_blank">
-                    {event.room}
+            {#if event.room.name}
+                <a href="{event.room.google_maps_link ?? event.room.cms_map_link ?? null}" target="_blank">
+                    {event.room.name}
                 </a>
             {:else}
                 Unknown
@@ -131,6 +131,7 @@
         /*word-wrap: break-word;*/
         flex: 0 1 auto;
         overflow: hidden;
+        word-wrap: break-word;
     }
     .time-room .room *{
         word-wrap: break-word;
