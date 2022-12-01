@@ -14,7 +14,7 @@ export default defineConfig({
                 short_name: "KIT Vorlesungs Roulette",
                 start_url: "/",
                 display: "standalone",
-                theme_color: "#3a354d",
+                theme_color: "#333333",
                 icons:[
                     {
                         "src": "pwa-icons/manifest-icon-192.maskable.png",
