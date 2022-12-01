@@ -65,7 +65,6 @@
     </div>
     <div class="footer">
         <div class="lecturer">
-            <span class="label">Bei</span>
             <span class="value">{event.lecturer || "Unknown"}</span>
         </div>
         <div class="type">
