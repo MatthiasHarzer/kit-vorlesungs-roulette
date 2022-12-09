@@ -95,6 +95,7 @@
 
     }
     .event.selected{
+        z-index: 9999999;
         -webkit-box-shadow:0 0 14px 6px rgba(255,170,0,0.9);
         -moz-box-shadow: 0 0 14px 6px rgba(255,170,0,0.9);
         box-shadow: 0 0 14px 6px rgba(255,170,0,0.9);

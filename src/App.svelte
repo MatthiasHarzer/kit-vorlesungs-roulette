@@ -84,7 +84,9 @@
 
         selected_event_index = remaining_indexes.splice(Math.floor(Math.random() * remaining_indexes.length), 1)[0];
     }
-
+    const clear_random_event = () => {
+        selected_event_index = -1;
+    }
 
     let config_panel_open = false;
     const open_config_panel = () => {
@@ -106,6 +108,8 @@
         // 	resolve(events);
         // });
     });
+
+
 </script>
 
 <main>
@@ -196,6 +200,10 @@
 
     {#if config_panel_open}
         <ConfigPanel on:close={close_config_panel} on:submit={submit_config} config={{...config}}/>
+    {/if}
+
+    {#if selected_event_index >= 0}
+        <div class="dark-background" on:click|stopPropagation={clear_random_event}></div>
     {/if}
 
 </main>
@@ -396,5 +404,15 @@
     .footer .github {
         float: right;
         margin-left: 15px;
+    }
+
+    .dark-background{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1;
     }
 </style>
