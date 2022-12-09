@@ -1,5 +1,5 @@
 <script lang="ts">
-
+    import {fade} from 'svelte/transition';
     import LoadingEllipsis from "./lib/LoadingEllipsis.svelte";
     import Event from "./lib/Event.svelte";
     import ConfigPanel from "./lib/ConfigPanel.svelte";
@@ -203,7 +203,7 @@
     {/if}
 
     {#if selected_event_index >= 0}
-        <div class="dark-background" on:click|stopPropagation={clear_random_event}></div>
+        <div transition:fade="{{duration: 200}}" class="dark-background" on:click|stopPropagation={clear_random_event}></div>
     {/if}
 
 </main>
@@ -406,7 +406,7 @@
         margin-left: 15px;
     }
 
-    .dark-background{
+    .dark-background {
         position: absolute;
         top: 0;
         left: 0;
