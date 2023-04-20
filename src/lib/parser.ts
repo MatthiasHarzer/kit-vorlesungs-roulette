@@ -24,6 +24,11 @@ export class Parser {
 
     public get_raw_event_items = (doc: Document): RawEventDataItem[] => {
         const event_list_element = doc.querySelector("#EVENTLIST");
+
+        if (event_list_element === null) {
+            return [];
+        }
+
         const tr_items = [...event_list_element.querySelectorAll("tr")];
         const event_elements: RawEventDataItem[] = [];
         let event_times = [];

@@ -1,10 +1,12 @@
 import {format_date} from "./util/util";
-import type {KITEvent, KITEventsConfig, CorsProxyBody} from "./types";
+import type {CorsProxyBody, KITEvent, KITEventsConfig} from "./types";
 import {END_TIMES} from "./types";
 import {Parser} from "./parser";
 
 const CORS_PROXY_SERVER = "https://cors.taptwice.dev/request";
 const BASE_URL = "https://campus.kit.edu/sp/campus/all/extendedSearch.asp";
+const TERMS_URL = "https://campus.kit.edu/sp/server/services/kit/terms.asp";
+
 const REQUEST_HEADERS = {
     'authority': 'campus.kit.edu', 'method': 'POST',
     'path': '/sp/campus/all/extendedSearch.asp', 'scheme': 'https',
@@ -25,30 +27,70 @@ const REQUEST_HEADERS = {
 
 const DEFAULT_FORM_DATA = {
     'search': 'Suchen',
-    'tguid': '0x40B784B43AED4CC9857335104533EDFB', // TODO: This is the tguid for the semester.
+    'tguid': '0x40B784B43AED4CC9857335104533EDFB', // This gets replaced by the correct term id
     'appointmentdate': '11.11.2022',
     'appointmenttimestart': '14%3A00',
     'appointmenttimeend': '15%3A30',
     'pagesize': 500,
 }
 
+interface RawTerm {
+    tstart: number,
+    tend: number,
+}
+
+interface Term{
+    start: Date,
+    end: Date,
+    id: string,
+}
+
+const term_ids = new Promise<Term[]>((resolve, reject) => {
+    make_request(TERMS_URL)
+        .then(response => response.json())
+        .then((json: {[id: string]: RawTerm}) => {
+            const terms = [];
+            for (const id in json) {
+                const term = json[id];
+                terms.push({
+                    start: new Date(term.tstart),
+                    end: new Date(term.tend),
+                    id: id
+                });
+            }
+            resolve(terms);
+        })
+        .catch(error => reject(error));
+
+});
+
+const get_term_id = async (date: Date): Promise<string> => {
+    const terms = await term_ids;
+    for (const term of terms) {
+        if (date >= term.start && date <= term.end) {
+            return term.id;
+        }
+    }
+    throw new Error("No term found for the given date.");
+}
 
 /**
  * Makes a request to the cors proxy to avoid CORS issues with the KIT endpoint.
  * @param url The url to make the request to.
  * @param form_data The form data to send.
  * @param headers The headers to send.
+ * @param cache Whether to cache the response.
  * @returns The response.
  *
  * @see https://github.com/MatthiasHarzer/minimal-cors-server
  */
-const make_request = (url: string, form_data: object, headers: object): Promise<Response> => {
+function make_request(url: string, form_data?: object, headers?: object, cache?: boolean): Promise<Response> {
     const body: CorsProxyBody = {
         method: "POST",
         url: url,
         data: form_data,
         headers: headers,
-        cache: true
+        cache: cache ?? true
     }
 
     return fetch(CORS_PROXY_SERVER, {
@@ -68,6 +110,7 @@ const make_request = (url: string, form_data: object, headers: object): Promise<
 export const get_events = async (config: KITEventsConfig): Promise<KITEvent[]> => {
     const json_form_data = {...DEFAULT_FORM_DATA};
 
+    json_form_data.tguid = await get_term_id(config.day);
     json_form_data.appointmentdate = format_date(config.day, "#DD#.#MM#.#YYYY#");
     json_form_data.appointmenttimestart = config.time;
     json_form_data.appointmenttimeend = END_TIMES[config.time];
@@ -83,3 +126,5 @@ export const get_events = async (config: KITEventsConfig): Promise<KITEvent[]> =
     if (config.types.length === 0) return events;
     return events.filter((event) => config.types.includes(event.type));
 }
+
+
