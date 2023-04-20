@@ -51,3 +51,38 @@ export const get_nearest_time_from_now = (): string => {
 
     return `${zero_fill(Math.floor(minutes / 60))}:${zero_fill(minutes % 60)}`;
 }
+
+export const get_day_diff = (date1: Date, date2: Date): number => {
+    const date1_copy = new Date(date1);
+    const date2_copy = new Date(date2);
+    date1_copy.setHours(0, 0, 0, 0);
+    date2_copy.setHours(0, 0, 0, 0);
+
+    const diffTime = date2_copy.getTime() - date1_copy.getTime();
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+}
+
+/**
+ * Adds days to a date without modifying the original date
+ * @param date Date to add days to
+ * @param days Days to add
+ * @returns New date with added days
+ */
+export const add_days = (date: Date, days: number): Date => {
+    const date_copy = new Date(date);
+    date_copy.setDate(date_copy.getDate() + days);
+    return date_copy;
+}
+
+export const get_label_from_day_diff = (day_diff: number): string => {
+    switch (day_diff) {
+        case 0:
+            return "Heute";
+        case 1:
+            return "Morgen";
+        case -1:
+            return "Gestern";
+        default:
+            return `${day_diff > 0 ? "In" : "Vor"} ${Math.abs(day_diff)} Tagen`;
+    }
+}

@@ -4,6 +4,7 @@
     import {DateInput} from "date-picker-svelte";
     import type {KITEventsConfig} from "../types";
     import {KITEventType, VALID_TIMES} from "../types";
+    import DaySelect from "./DaySelect.svelte";
 
     export let config: KITEventsConfig;
 
@@ -18,15 +19,13 @@
         if (isBackgroundClick(e)) {
             close();
         }
-
-        // console.log(config);
     }
 
     const submit = () => {
         dispatch("submit", config);
     }
 
-    const toggle_type = (type: string) => {
+    const toggle_type = (type: KITEventType) => {
         if (config.types.includes(type)) {
             config.types = config.types.filter(t => t !== type);
         } else {
@@ -50,7 +49,8 @@
             <div class="day item">
                 <span class="key">Tag</span>
                 <span class="value">
-                    <DateInput bind:value={config.day} format="yyyy-MM-dd" closeOnSelection={true}/>
+                    <DaySelect bind:date={config.day} />
+<!--                    <DateInput bind:value={config.day} format="yyyy-MM-dd" closeOnSelection={true}/>-->
                 </span>
             </div>
             <div class="day item">
@@ -101,6 +101,10 @@
         padding: 0.5rem;
     }
 
+    .value{
+        overflow: auto;
+    }
+
     .item:not(:last-child) {
         border-bottom: 1px solid #8d8d8d;
     }
@@ -122,6 +126,7 @@
         flex-wrap: wrap;
         justify-content: space-between;
         margin-bottom: 1rem;
+
     }
 
     .item.type .value label {

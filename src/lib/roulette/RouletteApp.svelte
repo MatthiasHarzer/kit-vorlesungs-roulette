@@ -132,7 +132,6 @@
                     </span>
                 </button>
             </div>
-
         </div>
         <hr/>
         {#await i_promise_events}
