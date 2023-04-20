@@ -12,6 +12,7 @@
     import svelte_icon from "../../assets/imgs/svelte.png"
     import github_icon from "../../assets/imgs/github.png"
     import * as util from "../util/util";
+    import {KITEventType} from "../types";
 
 
 
@@ -25,12 +26,12 @@
     }
 
     const cached_types_raw = localStorage.getItem("types");
-    const cached_types = cached_types_raw ? JSON.parse(cached_types_raw) : ["v"];
+    const cached_types = cached_types_raw ? JSON.parse(cached_types_raw) : [KITEventType.Vorlesung];
 
     let config: KITEventsConfig = {
         day: date,
         time: default_time,
-        types: cached_types.filter((type)=>type!=null)
+        types: cached_types.filter((type)=>type!=null && Object.values(KITEventType).includes(type))
     }
 
     const resets_indexes = () => {
