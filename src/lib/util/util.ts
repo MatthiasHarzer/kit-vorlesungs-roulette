@@ -1,3 +1,6 @@
+import {VALID_TIMES} from "../types";
+
+
 export const isBackgroundClick = e => {
     try {
         return e.srcElement.classList.contains("bg") || false;
@@ -27,4 +30,24 @@ export const format_date = (date: Date, formatString: string) => {
     ms = date.getMilliseconds();
     return formatString.replace("#hhhh#", hhhh).replace("#hhh#", hhh).replace("#hh#", hh).replace("#h#", h).replace("#mm#", mm).replace("#m#", m).replace("#ss#", ss).replace("#s#", s).replace("#ampm#", ampm).replace("#AMPM#", AMPM).replace("#ms#", ms);
 
+}
+
+export const get_nearest_time_from_now = (): string => {
+    const now = Date.now();
+    const hours = new Date(now).getHours();
+    const minutes_now = new Date(now).getMinutes() + hours * 60;
+
+    let minutes = VALID_TIMES.reduce((prev, curr) => {
+        // @ts-ignore
+        const minutes_curr = curr.split(":")[0] * 60 + curr.split(":")[1] * 1;
+        return (Math.abs(minutes_curr - minutes_now) < Math.abs(prev - minutes_now) ? minutes_curr : prev);
+    }, 0);
+
+    if (minutes == 0) {
+        minutes = 8 * 60;
+    }
+
+    const zero_fill = (num: number): string => num < 10 ? "0" + num : num.toString();
+
+    return `${zero_fill(Math.floor(minutes / 60))}:${zero_fill(minutes % 60)}`;
 }

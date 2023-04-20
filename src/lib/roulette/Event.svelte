@@ -3,7 +3,7 @@
 
     // import type {KITEvent} from "./api_handler";
 
-    import type {KITEvent} from "./types";
+    import type {KITEvent} from "../types";
 
     export let event: KITEvent;
     export let index: number;
@@ -52,10 +52,10 @@
     <hr>
     <div class="time-room">
         <span class="time">{event.time}</span>
-        <span class="label">in Room: </span>
+<!--        <span class="label">in Room: </span>-->
         <span class="room">
             {#if event.room.name}
-                <a href="{event.room.google_maps_link ?? event.room.cms_map_link ?? null}" target="_blank">
+                <a href="{event.room.link ?? null}" target="_blank">
                     {event.room.name}
                 </a>
             {:else}
@@ -132,6 +132,7 @@
         flex: 0 1 auto;
         overflow: hidden;
         word-wrap: break-word;
+        margin-left: 5px;
     }
     .time-room .room *{
         word-wrap: break-word;
