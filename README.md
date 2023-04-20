@@ -6,6 +6,6 @@
 
 A web app to display lectures of the [KIT](https://www.kit.edu/) for a given time and day.
 
-It uses my [personal API](https://github.com/MatthiasHarzer/personal_api) to retrieve parsed events from the [KIT extended search](https://campus.kit.edu/sp/campus/all/extendedSearch.asp) endpoint formatted as json (the KIT endpoint is kinda trash and only returns a prerendered HTML page).
+Retrieves events from the [KIT extended search](https://campus.kit.edu/sp/campus/all/extendedSearch.asp) endpoint. Uses my [`minimal-cors-server`](https://github.com/MatthiasHarzer/minimal-cors-server) to avoid CORS problems with the KIT server.
 
 Built using [Svelte](https://svelte.dev/).
