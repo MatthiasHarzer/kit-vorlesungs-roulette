@@ -29,7 +29,7 @@
     const toggle_type = (type: string) => {
         if (config.types.includes(type)) {
             config.types = config.types.filter(t => t !== type);
-        } else if (type instanceof KITEventType) {
+        } else {
             config.types.push(type);
 
         }
