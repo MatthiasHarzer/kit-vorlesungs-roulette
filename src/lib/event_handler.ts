@@ -46,7 +46,7 @@ interface Term{
 }
 
 const i_promise_terms = new Promise<Term[]>((resolve, reject) => {
-    make_request(TERMS_URL)
+    make_request(TERMS_URL, {}, {}, false)
         .then(response => response.json())
         .then((json: {[id: string]: RawTerm}) => {
             const terms = [];
