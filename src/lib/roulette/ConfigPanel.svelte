@@ -1,7 +1,6 @@
 <script lang="ts">
     import {createEventDispatcher} from "svelte";
     import {isBackgroundClick} from "../util/util";
-    import {DateInput} from "date-picker-svelte";
     import type {KITEventsConfig} from "../types";
     import {KITEventType, VALID_TIMES} from "../types";
     import DaySelect from "./DaySelect.svelte";

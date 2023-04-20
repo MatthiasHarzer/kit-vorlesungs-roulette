@@ -1,5 +1,5 @@
 import {format_date} from "./util/util";
-import type {KITEvent, KITEventsConfig, CorsProxyHeaders} from "./types";
+import type {KITEvent, KITEventsConfig, CorsProxyBody} from "./types";
 import {END_TIMES} from "./types";
 import {Parser} from "./parser";
 
@@ -43,7 +43,7 @@ const DEFAULT_FORM_DATA = {
  * @see https://github.com/MatthiasHarzer/minimal-cors-server
  */
 const make_request = (url: string, form_data: object, headers: object): Promise<Response> => {
-    const body: CorsProxyHeaders = {
+    const body: CorsProxyBody = {
         method: "POST",
         url: url,
         data: form_data,

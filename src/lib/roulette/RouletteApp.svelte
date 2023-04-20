@@ -4,7 +4,7 @@
     import Event from "./Event.svelte";
     import ConfigPanel from "./ConfigPanel.svelte";
     import {format_date} from "../util/util";
-    import {get_events} from "../api_handler";
+    import {get_events} from "../event_handler";
     import type {KITEvent, KITEventsConfig} from "../types";
 
     import circled from "../../assets/imgs/circled.png"

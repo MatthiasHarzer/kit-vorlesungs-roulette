@@ -1,10 +1,10 @@
 import {KIT_CMS_BASE_EVENT_URL, KIT_CMS_BASE_ROOM_URL} from "./consts";
 
 /**
- * The headers for the cors proxy server.
+ * The body for the cors proxy server request.
  * @see https://github.com/MatthiasHarzer/minimal-cors-server
  */
-export interface CorsProxyHeaders {
+export interface CorsProxyBody {
     method: "POST" | "GET" | "PUT" | "DELETE";
     url: string;
     headers?: object;
