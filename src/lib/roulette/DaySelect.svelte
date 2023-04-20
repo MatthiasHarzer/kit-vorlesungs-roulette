@@ -37,9 +37,9 @@
             <span class="material-icons">double_arrow</span>
         </button>
     </div>
-    <button class="material today-btn" on:click={on_today}>
-        <span class="material-icons">refresh</span>
-    </button>
+<!--    <button class="material today-btn" on:click={on_today}>-->
+<!--        <span class="material-icons">refresh</span>-->
+<!--    </button>-->
 </div>
 </div>
 
