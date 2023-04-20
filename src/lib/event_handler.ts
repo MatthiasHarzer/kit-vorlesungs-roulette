@@ -45,7 +45,7 @@ interface Term{
     id: string,
 }
 
-const term_ids = new Promise<Term[]>((resolve, reject) => {
+const i_promise_terms = new Promise<Term[]>((resolve, reject) => {
     make_request(TERMS_URL)
         .then(response => response.json())
         .then((json: {[id: string]: RawTerm}) => {
@@ -65,7 +65,7 @@ const term_ids = new Promise<Term[]>((resolve, reject) => {
 });
 
 const get_term_id = async (date: Date): Promise<string> => {
-    const terms = await term_ids;
+    const terms = await i_promise_terms;
     for (const term of terms) {
         if (date >= term.start && date <= term.end) {
             return term.id;
