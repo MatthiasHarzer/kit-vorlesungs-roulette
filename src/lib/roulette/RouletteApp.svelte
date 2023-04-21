@@ -33,6 +33,12 @@
         time: default_time,
         types: cached_types.filter((type)=>type!=null && Object.values(KITEventType).includes(type))
     }
+    // config = {
+    //     ...config,
+    //     day: new Date("Mon Apr 24 2023 17:41:48 GMT+0200 (Central European Summer Time"),
+    //     time: "08:00"
+    // }
+
 
     const resets_indexes = () => {
         available_indexes = available_events.map((_, i) => i);
@@ -50,7 +56,7 @@
 
     let selected_event_index = -1;
 
-    let i_promise_events;
+    let i_promise_events: Promise<KITEvent[]>;
     let available_events: KITEvent[] = [];
     let available_indexes: number[] = [];
     let remaining_indexes: number[] = [];
@@ -144,7 +150,7 @@
                 <div class="events">
                     {#each events as event}
 
-                        <Event event={event} index={events.indexOf(event)}
+                        <Event event={event} config={config} index={events.indexOf(event)}
                                selected={selected_event_index===events.indexOf(event)}/>
 
                     {/each}

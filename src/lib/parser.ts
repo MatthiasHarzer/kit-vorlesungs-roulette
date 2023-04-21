@@ -1,5 +1,6 @@
-import {KIT_EVENT_REGEX, KIT_GGUID_GROUP_REGEX} from "./consts";
-import {KITEvent, KITRoom, KIT_EVENT_TYPES_MAP, KITEventType} from "./types";
+import {KIT_DAY_TIME_REGEX, KIT_UID_REGEX, KIT_GGUID_GROUP_REGEX} from "./consts";
+import {KIT_ENDPOINT_EVENT_TYPES_MAP, KITEvent, KITEventOccurrence, KITEventType, KITRoom} from "./types";
+import * as util from "./util/util";
 
 
 interface RawEventDataItem {
@@ -7,19 +8,43 @@ interface RawEventDataItem {
     event_occurrences: Element[];
 }
 
+interface ParserArgs {
+    target_time?: string;
+    target_room_id?: string;
+}
+
 /**
  * The KIT events parser. Parses raw HTML from the KIT CMS and returns KIT events.
  */
 export class Parser {
     private readonly raw_html: string;
-    private readonly target_time: string;
-    private target_day: Date;
+    private readonly target_time?: string;
+    private readonly target_room_id?: string;
+    private readonly target_day: Date;
+    private room_cache: { [id: string]: KITRoom } = {};
 
-    constructor(raw_html: string, target_day: Date, target_time: string) {
+    private get target_day_short_handle(): string {
+        return this.target_day.toLocaleDateString("de-DE", {weekday: "short"});
+    }
+
+    private get target_date_formatted(): string {
+        return util.format_date(this.target_day, "#DD#.#MM#.#YYYY#");
+    }
+
+    constructor(raw_html: string, target_day: Date, args: ParserArgs = {}) {
+        const {target_time, target_room_id} = args;
         this.raw_html = raw_html;
         this.target_day = target_day;
         this.target_time = target_time;
+        this.target_room_id = target_room_id;
+    }
 
+    private get_or_create_room = (room_id: string, room_name: string): KITRoom => {
+        if (this.room_cache[room_id] === undefined) {
+            this.room_cache[room_id] = new KITRoom(room_id, room_name);
+        }
+
+        return this.room_cache[room_id];
     }
 
     public get_raw_event_items = (doc: Document): RawEventDataItem[] => {
@@ -33,7 +58,7 @@ export class Parser {
         const event_elements: RawEventDataItem[] = [];
         let event_times = [];
         for (const child of tr_items) {
-            if (KIT_EVENT_REGEX.test(child.id)) {
+            if (KIT_UID_REGEX.test(child.id)) {
                 event_times = []
                 event_elements.push({
                     event_element: child,
@@ -48,57 +73,71 @@ export class Parser {
     }
 
     private get_type_from_string = (type: string): KITEventType => {
-        return KIT_EVENT_TYPES_MAP[type.toLowerCase()] ?? KITEventType.Sonstiges;
+        return KIT_ENDPOINT_EVENT_TYPES_MAP[type.toLowerCase()] ?? KITEventType.Sonstiges;
     }
 
-    private get_room_from_event_occurrences_elements = (event_occurrences_elements: Element[]): KITRoom | null => {
+
+    private get_event_occurrences_by_elements = (event_occurrences_elements: Element[]): KITEventOccurrence[] => {
+        const occurrences: KITEventOccurrence[] = [];
         for (const element of event_occurrences_elements) {
             if (element.children.length !== 2) continue;
             const inner_element = element.children[1];
 
             const date_element = inner_element.querySelector(".date");
-            const room_element = inner_element.querySelector("a.room");
+            const room_element = inner_element.querySelector(".room");
 
-            if (date_element === null || room_element === null) continue;
+            let room: KITRoom | null = null;
 
-            const date = date_element.textContent;
-            const room_name = room_element.textContent;
-            const room_gguid_match = room_element.getAttribute("href").match(KIT_GGUID_GROUP_REGEX);
-            const room_id = room_gguid_match[1];
+            if (date_element === null) continue;
 
+            const day_time = date_element.textContent;
+            const match = day_time.match(KIT_DAY_TIME_REGEX);
+            if (match == null) continue;
 
-            if (date.includes(this.target_time)) {
-                return new KITRoom(room_id, room_name);
+            if(room_element !== null){
+                const room_name = room_element?.textContent;
+                const room_gguid_match = room_element.getAttribute("href")?.match(KIT_GGUID_GROUP_REGEX);
+                const room_id = room_gguid_match ? room_gguid_match[1] : room_name;
+                room = this.get_or_create_room(room_id, room_name);
             }
+
+
+            const [, week_day, , date, time] = match;
+
+
+
+            // if(room === null && plain_room_name != undefined){
+            //     console.log(plain_room_name)
+            //     room = this.get_or_create_room(plain_room_name, plain_room_name);
+            // }
+
+            const occurrence = new KITEventOccurrence(
+                room,
+                time,
+                week_day,
+                date
+            )
+
+            occurrences.push(occurrence);
         }
 
-        return null;
+        return occurrences;
     }
+
 
     private get_event_from_raw_event_data = (event: RawEventDataItem): KITEvent | null => {
         const REQUIRED_CHILDREN = 9;
-
         const {event_element, event_occurrences} = event;
 
         const id = event_element.id;
         const children = [...event_element.children];
-        const room = this.get_room_from_event_occurrences_elements(event_occurrences);
 
         if (children.length !== REQUIRED_CHILDREN) {
+            // Not a valid event
             return null;
         }
 
-        const [
-            _,
-            lvlNumber,
-            title,
-            lecturer,
-            type,
-            typeShort,
-            format,
-            formatShort,
-            __
-        ] = children;
+        const [, , title, lecturer, , typeShort, format, ,] = children;
 
         return new KITEvent(
             id,
@@ -106,8 +145,7 @@ export class Parser {
             this.get_type_from_string(typeShort.textContent),
             lecturer.textContent,
             format.textContent,
-            this.target_time,
-            room
+            this.get_event_occurrences_by_elements(event_occurrences)
         )
     }
 
@@ -125,12 +163,18 @@ export class Parser {
         return this.get_all_events_from_raw_data_items(raw_events);
     }
 
+    // public get_all_events_with_day = (day: Date): KITEvent[] => {
+    //     const events = this.get_all_events();
+    //     const day_short_hand = day.toLocaleDateString("de-DE", {weekday: "short"});
+    // }
+
+
     /**
      * Returns all events from the parsed HTML that have a room.
      */
-    public get_all_events_with_valid_room = (): KITEvent[] => {
-        return this.get_all_events().filter((event) => event.room !== null);
-    }
+    // public get_all_events_with_valid_room = (): KITEvent[] => {
+    //     return this.get_all_events().filter((event) => event.room !== null);
+    // }
 
     private parse = () => {
         const parser = new DOMParser();

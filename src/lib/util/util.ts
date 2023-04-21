@@ -11,7 +11,7 @@ export const isBackgroundClick = e => {
 
 
 export const format_date = (date: Date, formatString: string) => {
-    var YYYY, YY, MMMM, MMM, MM, M, DDDD, DDD, DD, D, hhhh, hhh, hh, h, mm, m, ss, s, ampm, AMPM, dMod, th, ms;
+    let YYYY, YY, MMMM, MMM, MM, M, DDDD, DDD, DD, D, hhhh, hhh, hh, h, mm, m, ss, s, ampm, AMPM, dMod, th, ms;
     YY = ((YYYY = date.getFullYear()) + "").slice(-2);
     MM = (M = date.getMonth() + 1) < 10 ? ('0' + M) : M;
     MMM = (MMMM = ["Jan.", "Feb.", "März", "April", "Mai", "Juni", "Juli", "Aug.", "Sept.", "Okt.", "Nov.", "Dez."][M - 1]).substring(0, 3);

@@ -2,7 +2,7 @@
     import {createEventDispatcher} from "svelte";
     import {isBackgroundClick} from "../util/util";
     import type {KITEventsConfig} from "../types";
-    import {KITEventType, VALID_TIMES} from "../types";
+    import {KIT_EVENT_TYPES_LOCALIZATION, KITEventType, VALID_TIMES} from "../types";
     import DaySelect from "./DaySelect.svelte";
 
     export let config: KITEventsConfig;
@@ -65,10 +65,9 @@
             <div class="type item">
                 <span class="key">Typ</span>
                 <span class="value">
-                    {#each Object.keys(KITEventType) as key}
+                    {#each Object.keys(KIT_EVENT_TYPES_LOCALIZATION) as key}
                         <label class="box-shadow" for={key} class:active={config.types.includes(key)}>
-
-                            {KITEventType[key]}
+                            {KIT_EVENT_TYPES_LOCALIZATION[key]}
                         </label>
                         <input hidden type="checkbox" name="type" id={key} value={key} on:change={()=>{
                             toggle_type(key);

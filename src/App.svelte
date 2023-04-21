@@ -1,6 +1,7 @@
 <script lang="ts">
 
     import RouletteApp from "./lib/roulette/RouletteApp.svelte";
+
 </script>
 
 <main>
