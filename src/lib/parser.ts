@@ -18,25 +18,11 @@ interface ParserArgs {
  */
 export class Parser {
     private readonly raw_html: string;
-    private readonly target_time?: string;
-    private readonly target_room_id?: string;
-    private readonly target_day: Date;
     private room_cache: { [id: string]: KITRoom } = {};
 
-    private get target_day_short_handle(): string {
-        return this.target_day.toLocaleDateString("de-DE", {weekday: "short"});
-    }
 
-    private get target_date_formatted(): string {
-        return util.format_date(this.target_day, "#DD#.#MM#.#YYYY#");
-    }
-
-    constructor(raw_html: string, target_day: Date, args: ParserArgs = {}) {
-        const {target_time, target_room_id} = args;
+    constructor(raw_html: string) {
         this.raw_html = raw_html;
-        this.target_day = target_day;
-        this.target_time = target_time;
-        this.target_room_id = target_room_id;
     }
 
     private get_or_create_room = (room_id: string, room_name: string): KITRoom => {
@@ -101,15 +87,7 @@ export class Parser {
                 room = this.get_or_create_room(room_id, room_name);
             }
 
-
             const [, week_day, , date, time] = match;
-
-
-
-            // if(room === null && plain_room_name != undefined){
-            //     console.log(plain_room_name)
-            //     room = this.get_or_create_room(plain_room_name, plain_room_name);
-            // }
 
             const occurrence = new KITEventOccurrence(
                 room,
@@ -160,7 +138,7 @@ export class Parser {
     public get_all_events = (): KITEvent[] => {
         const doc = this.parse();
         const raw_events = this.get_raw_event_items(doc);
-        return this.get_all_events_from_raw_data_items(raw_events);
+        return this.get_all_events_from_raw_data_items(raw_events).filter((event)=>event.occurrences.length > 0);
     }
 
     // public get_all_events_with_day = (day: Date): KITEvent[] => {

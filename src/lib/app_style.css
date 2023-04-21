@@ -1,0 +1,56 @@
+.main.app-page {
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*left: 0;*/
+    /*width: 100vw;*/
+    /*height: 100vh;*/
+    flex: 1 0 0;
+    overflow: hidden;
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.main.app-page .content {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    /*height: min-content;*/
+    /*max-height: calc(100% - 54px);*/
+    overflow: auto;
+}
+
+.main.app-page .header {
+    flex: 0 0 auto;
+    overflow: hidden;
+    height: 54px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    /* z-index: 2; */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+}
+
+.main.app-page .header span.title {
+    margin: 0;
+    padding: 0 0 0 10px;
+    line-height: 54px;
+    font-size: 24px;
+    font-weight: 550;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.main.app-page .loading {
+    flex-direction: column;
+}
+
+.main.app-page .loading h3 {
+    font-weight: bold;
+    color: #dcdcdc;
+
+}

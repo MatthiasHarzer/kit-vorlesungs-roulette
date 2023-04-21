@@ -1,5 +1,15 @@
 import {DATE_FORMAT, KIT_CMS_BASE_EVENT_URL, KIT_CMS_BASE_ROOM_URL, KIT_UID_REGEX} from "./consts";
-import {format_date} from "./util/util";
+import {format_date, time_to_total_seconds} from "./util/util";
+
+export interface KITExtendedSearchFormData {
+    search: string;
+    tguid: string;
+    appointmentdate: string;
+    appointmenttimestart: string;
+    appointmenttimeend: string;
+    pagesize: number;
+    room: string;
+}
 
 /**
  * The body for the cors proxy server request.
@@ -108,11 +118,24 @@ export class KITRoom {
     }
 }
 
+export interface KITOccurrenceEventComparable{
+    day: Date;
+    time?: string;
+}
+
 export class KITEventOccurrence {
     date?: string;
     week_day: string;
     time_span: string;
     room?: KITRoom;
+
+    public get time_start(): string {
+        return this.time_span.split("-")[0];
+    }
+
+    public get time_start_as_total_seconds(): number {
+        return time_to_total_seconds(this.time_start);
+    }
 
     constructor(room: KITRoom, time_span: string, week_day: string, date?: string) {
         this.room = room;
@@ -125,10 +148,10 @@ export class KITEventOccurrence {
      * Returns true if the occurrence matches the given config (day, time, date).
      * @param config The config to match against.
      */
-    public matches(config: KITEventsConfig): boolean {
+    public matches(config: KITOccurrenceEventComparable): boolean {
         const config_week_day_short = config.day.toLocaleDateString("de-DE", {weekday: "short"});
         const config_date_formatted = format_date(config.day, DATE_FORMAT)
-        return this.week_day == config_week_day_short && this.time_span.startsWith(config.time) && (this.date == null || this.date == config_date_formatted);
+        return this.week_day == config_week_day_short && (config.time == null || this.time_span.startsWith(config.time)) && (this.date == null || this.date == config_date_formatted);
     }
 }
 
@@ -151,10 +174,6 @@ export class KITEvent {
         return `${KIT_CMS_BASE_EVENT_URL}${this.id}`;
     }
 
-    public get_occurrence_by_time(time: string, date?: string): KITEventOccurrence[] {
-        return this.occurrences.filter(occurrence => occurrence.time_span == time && (date || occurrence.date == date))
-    }
-
 
     constructor(id: string, title: string, type: KITEventType, lecturer: string, format: string, occurrences: KITEventOccurrence[]) {
         this.id = id;
@@ -169,10 +188,15 @@ export class KITEvent {
 /**
  * The KIT events config, containing the day, time and types. Used to filter the events.
  */
-export interface KITEventsConfig {
+export interface KITTimeEventsConfig {
     day: Date,
     time: string,
     types: KITEventType[],
+}
+
+export interface KITRoomEventsConfig {
+    rooms: KITRoom[],
+    day: Date,
 }
 
 /**

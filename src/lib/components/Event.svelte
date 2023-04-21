@@ -2,11 +2,11 @@
 
     // import type {KITEvent} from "./api_handler";
 
-    import type {KITEvent, KITEventsConfig} from "../types";
+    import type {KITEvent, KITOccurrenceEventComparable, KITTimeEventsConfig} from "../types";
     import {KIT_EVENT_TYPES_LOCALIZATION, KITEventOccurrence} from "../types";
 
     export let event: KITEvent;
-    export let config: KITEventsConfig;
+    export let config: KITOccurrenceEventComparable;
 
     export let index: number;
     export let selected: boolean = false;
@@ -182,7 +182,7 @@
 
     .footer .lecturer {
         /*bottom: 0;*/
-        /*margin-top: auto;*/
+        margin-top: 4px;
     }
 
     .footer .lecturer .value {

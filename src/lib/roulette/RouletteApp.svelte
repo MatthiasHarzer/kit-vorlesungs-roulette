@@ -1,18 +1,18 @@
 <script lang="ts">
     import {fade} from 'svelte/transition';
-    import LoadingEllipsis from "../util/LoadingEllipsis.svelte";
-    import Event from "./Event.svelte";
+    import LoadingEllipsis from "../components/LoadingEllipsis.svelte";
+    import Event from "../components/Event.svelte";
     import ConfigPanel from "./ConfigPanel.svelte";
     import {format_date} from "../util/util";
     import {get_events} from "../event_handler";
-    import type {KITEvent, KITEventsConfig} from "../types";
+    import type {KITEvent, KITTimeEventsConfig} from "../types";
 
     import circled from "../../assets/imgs/circled.png"
     import arrow from "../../assets/imgs/arrow.png"
-    import svelte_icon from "../../assets/imgs/svelte.png"
-    import github_icon from "../../assets/imgs/github.png"
     import * as util from "../util/util";
     import {KITEventType} from "../types";
+    import CreditFooter from "../components/CreditFooter.svelte";
+    import "../app_style.css";
 
 
 
@@ -28,7 +28,7 @@
     const cached_types_raw = localStorage.getItem("types");
     const cached_types = cached_types_raw ? JSON.parse(cached_types_raw) : [KITEventType.Vorlesung];
 
-    let config: KITEventsConfig = {
+    let config: KITTimeEventsConfig = {
         day: date,
         time: default_time,
         types: cached_types.filter((type)=>type!=null && Object.values(KITEventType).includes(type))
@@ -98,7 +98,7 @@
 
 </script>
 
-<div class="main">
+<div class="main app-page">
     <div class="header">
         <span class="title">KIT Vorlesungs Roulette</span>
         <div class="randomize">
@@ -163,23 +163,8 @@
         {:catch error}
             <div class="error">{error}</div>
         {/await}
-        <div class="footer">
-            <div class="made-by">
-                <span>
-                    Made by <a href="https://matthiasharzer.de" target="_blank">Matthias Harzer</a> with <a
-                        href="https://svelte.dev" target="_blank"><img
-                        src={svelte_icon} alt="Svelte" class="svelte"></a>
-                </span>
-            </div>
-            <div class="github">
+        <CreditFooter />
 
-                <a href="https://github.com/MatthiasHarzer/kit-vorlesungs-roulette" target="_blank">
-                    This project is open source
-                    <img src={github_icon} alt="Github">
-                </a>
-
-            </div>
-        </div>
     </div>
 
     {#if config_panel_open}
@@ -194,27 +179,7 @@
 
 
 <style>
-    .main {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        overflow: hidden;
-        color: white;
-        display: flex;
-        flex-direction: column;
-    }
 
-    .content {
-        position: relative;
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        /*height: min-content;*/
-        /*max-height: calc(100% - 54px);*/
-        overflow: auto;
-    }
 
     .config .text {
         text-align: center;
@@ -258,18 +223,7 @@
         margin: 0 auto;
     }
 
-    .header {
-        flex: 0 0 auto;
-        overflow: hidden;
-        height: 54px;
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
-        0 6px 20px 0 rgba(0, 0, 0, 0.19);
-        /* z-index: 2; */
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 1rem;
-    }
+
 
     .randomize {
         display: flex;
@@ -305,27 +259,7 @@
     /*    background-color: transparent;*/
     /*}*/
 
-    .header span.title {
-        margin: 0;
-        padding: 0;
-        padding-left: 10px;
-        line-height: 54px;
-        font-size: 24px;
-        font-weight: 550;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
 
-    .loading {
-        flex-direction: column;
-    }
-
-    .loading h3 {
-        font-weight: bold;
-        color: #dcdcdc;
-
-    }
 
     .events {
         /*height: 100%;*/
@@ -342,53 +276,7 @@
         /*grid-auto-rows: 5px;*/
     }
 
-    .footer {
-        border-top: 1px solid grey;
-        padding: 0.5rem;
-        /*position: fixed;*/
-        bottom: 0;
-        margin-top: auto;
-        color: #b2b2b2;
-        /*display: inline-flex;*/
-        /*flex-direction: column;*/
-        font-size: 0.9rem;
-        justify-content: space-between;
 
-    }
-
-    .footer > * {
-        /*margin: 0 0.5rem;*/
-        display: block;
-        flex-direction: column;
-        align-items: center;
-        float: left;
-    }
-
-    .footer div > * {
-        display: flex;
-        align-items: center;
-
-    }
-
-    .footer img {
-        height: 1.2rem;
-        width: auto;
-        margin-left: 0.5rem;
-    }
-
-    .footer img.svelte {
-        margin-left: 0.1rem;
-    }
-
-    .footer a {
-        color: white;
-        margin: 0 3px;
-    }
-
-    .footer .github {
-        float: right;
-        margin-left: 15px;
-    }
 
     .dark-background {
         position: absolute;

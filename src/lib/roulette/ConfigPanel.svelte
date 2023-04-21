@@ -1,11 +1,11 @@
 <script lang="ts">
     import {createEventDispatcher} from "svelte";
     import {isBackgroundClick} from "../util/util";
-    import type {KITEventsConfig} from "../types";
+    import type {KITTimeEventsConfig} from "../types";
     import {KIT_EVENT_TYPES_LOCALIZATION, KITEventType, VALID_TIMES} from "../types";
-    import DaySelect from "./DaySelect.svelte";
+    import DaySelect from "../components/DaySelect.svelte";
 
-    export let config: KITEventsConfig;
+    export let config: KITTimeEventsConfig;
 
     // console.log(config)
 

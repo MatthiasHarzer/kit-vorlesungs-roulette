@@ -86,3 +86,8 @@ export const get_label_from_day_diff = (day_diff: number): string => {
             return `${day_diff > 0 ? "In" : "Vor"} ${Math.abs(day_diff)} Tagen`;
     }
 }
+
+export const time_to_total_seconds = (time: string): number => {
+    const [hours, minutes] = time.split(":");
+    return parseInt(hours) * 60 * 60 + parseInt(minutes) * 60;
+}
