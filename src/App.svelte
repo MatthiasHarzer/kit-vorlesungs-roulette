@@ -17,11 +17,20 @@
         localStorage.setItem("current_app", JSON.stringify(app));
     }
 
+    enum ScrollDirection {
+        Horizontal,
+        Vertical
+    }
+
     let track_start_x: number = null;
     let track_start_y: number = 0;
     let track_delta_x: number = 0;
     let track_delta_y: number = 0;
     let view_width: number = 0;
+    let scroll_direction: ScrollDirection = null;
+
+    const SCROLL_Y_THRESHOLD = 50;
+    const SCROLL_X_MIN = 150;
 
     const on_track_start = (e: TouchEvent) => {
         track_start_x = e.touches[0].clientX;
@@ -29,25 +38,44 @@
     }
 
     const on_track_end = (e: TouchEvent) => {
-        track_start_x = null;
+        scroll_direction = null;
 
-        if (current_app === App.Roulette && track_delta_x < 0) {
-            enter_app(App.RoomEvents);
-        } else if (current_app == App.RoomEvents && track_delta_x > 0) {
-            enter_app(App.Roulette);
+        if(scroll_direction === ScrollDirection.Vertical) return;
+
+        if (current_app === App.Roulette) {
+            if (track_delta_x < -SCROLL_X_MIN) {
+                enter_app(App.RoomEvents);
+            } else {
+                enter_app(App.Roulette);
+            }
+        } else if (current_app == App.RoomEvents) {
+            if (track_delta_x > SCROLL_X_MIN) {
+                enter_app(App.Roulette);
+            } else {
+                enter_app(App.RoomEvents);
+            }
         }
 
     }
 
     const on_track = (e: TouchEvent) => {
-        track_delta_x = e.touches[0].clientX - track_start_x;
-        track_delta_y = e.touches[0].clientY - track_start_y;
+        if (scroll_direction === null) {
+            track_delta_x = e.touches[0].clientX - track_start_x;
+            track_delta_y = e.touches[0].clientY - track_start_y;
+            scroll_direction = Math.abs(track_delta_x) > Math.abs(track_delta_y) ? ScrollDirection.Horizontal : ScrollDirection.Vertical;
+        } else {
+            if (scroll_direction === ScrollDirection.Horizontal) {
+                track_delta_x = e.touches[0].clientX - track_start_x;
+            } else {
+                track_delta_y = e.touches[0].clientY - track_start_y;
+            }
+        }
     }
 
     let offset: number = 0;
 
     $:{
-        if (track_start_x == null || Math.abs(track_delta_y) > 100) {
+        if (scroll_direction == null) {
             offset = current_app === App.Roulette ? 0 : -view_width;
             track_delta_x = 0;
         } else {
@@ -67,7 +95,7 @@
 <main bind:clientWidth={view_width} on:touchend={on_track_end} on:touchmove={on_track} on:touchstart={on_track_start}>
 
     <div class="swipe-apps"
-         class:active-scroll={track_start_x != null}
+         class:active-scroll={scroll_direction != null}
          style="--offset: {offset}px;">
         <div class="app">
             <RouletteApp/>
