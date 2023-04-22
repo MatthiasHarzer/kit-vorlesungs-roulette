@@ -4,7 +4,8 @@
     /*left: 0;*/
     /*width: 100vw;*/
     /*height: 100vh;*/
-    flex: 1 0 0;
+    /*flex: 1 0 0;*/
+    height: 100%;
     overflow: hidden;
     color: white;
     display: flex;
@@ -18,7 +19,7 @@
     flex-direction: column;
     /*height: min-content;*/
     /*max-height: calc(100% - 54px);*/
-    overflow: auto;
+    overflow-y: auto;
 }
 
 .main.app-page .header {

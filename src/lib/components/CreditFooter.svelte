@@ -25,7 +25,7 @@
 <style>
     .footer {
         border-top: 1px solid grey;
-        padding: 0.5rem;
+        padding: 0.5rem 0.5rem 1rem 0.5rem;
         /*position: fixed;*/
         bottom: 0;
         margin-top: auto;
