@@ -14,23 +14,6 @@
     let auto_complete_items: KITRoom[] = [];
     let typing_timeout: NodeJS.Timeout | null = null;
 
-    let r = [
-        {
-            "id": "0x6D6BBAC32C22468E92C738BF91977E96",
-            "name": "30.95 Vorplatz (Audimax)"
-        },
-        {
-            "id": "0xA6DC6454202D214F8BB0547DD6C55813",
-            "name": "20.40 R015 Seminarraum Bau- und Architekturgeschichte"
-        },
-        {
-            "id": "0xD045A2556274C44EB777270BF7417A50",
-            "name": "20.40 R130 Professur Digital Design and Fabrication"
-        },
-        {id: '0x8352C75F466935449E9A7EA607302CD0', name: '30.95 Forum Hörsaal (Audimax)'},
-    ]
-
-
     const try_get_cached_rooms = () => {
         const cached_rooms_raw = localStorage.getItem("cached_rooms");
         try {

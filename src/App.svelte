@@ -156,6 +156,8 @@
         border: 2px solid white;
         margin: 0.2rem;
         transition: background-color 0.2s ease-in-out;
+        cursor: pointer;
+
     }
 
     .page-indicator.active {
