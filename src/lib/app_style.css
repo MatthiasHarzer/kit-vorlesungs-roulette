@@ -22,7 +22,7 @@
     overflow-y: auto;
 }
 
-.main.app-page .header {
+.main.app-page .app-bar {
     flex: 0 0 auto;
     overflow: hidden;
     height: 54px;
@@ -35,7 +35,7 @@
     padding: 0 1rem;
 }
 
-.main.app-page .header span.title {
+.main.app-page .app-bar span.title {
     margin: 0;
     padding: 0 0 0 10px;
     line-height: 54px;

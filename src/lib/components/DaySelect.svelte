@@ -55,7 +55,7 @@
     }
 
     .day-label {
-        width: 115px;
+        /*width: 115px;*/
         display: flex;
         flex-direction: column;
         align-items: center;

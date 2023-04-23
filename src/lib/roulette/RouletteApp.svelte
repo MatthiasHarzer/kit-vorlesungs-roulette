@@ -99,7 +99,7 @@
 </script>
 
 <div class="main app-page">
-    <div class="header">
+    <div class="app-bar">
         <span class="title">KIT Vorlesungs Roulette</span>
         <div class="randomize">
             <img src={arrow} alt="->" class="arrow"/>

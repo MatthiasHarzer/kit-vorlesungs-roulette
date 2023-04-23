@@ -84,7 +84,7 @@
 </script>
 
 <div class="main app-page">
-    <div class="header">
+    <div class="app-bar">
         <span class="title">KIT Room Event Search</span>
     </div>
     <div class="content">
