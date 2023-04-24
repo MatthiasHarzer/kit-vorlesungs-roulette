@@ -22,6 +22,7 @@ export interface CorsProxyBody {
     body?: string;
     data?: object;
     cache?: boolean;
+    max_age?: number;
 }
 
 /**
@@ -212,3 +213,26 @@ export const END_TIMES = {
 }
 export const VALID_TIMES = Object.keys(END_TIMES);
 
+export interface RawTerm {
+    tstart: number,
+    tend: number,
+}
+
+export interface Term {
+    start: Date,
+    end: Date,
+    id: string,
+}
+
+export interface RawRoom {
+    id: string,
+    name: string,
+}
+
+
+export interface RequestParams {
+    form_data?: KITExtendedSearchFormData,
+    headers?: object,
+    cache?: boolean,
+    max_age?: number,
+}

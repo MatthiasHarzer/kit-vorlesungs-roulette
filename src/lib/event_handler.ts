@@ -4,7 +4,7 @@ import type {
     KITEvent,
     KITExtendedSearchFormData,
     KITRoomEventsConfig,
-    KITTimeEventsConfig
+    KITTimeEventsConfig, RawRoom, RawTerm, RequestParams, Term
 } from "./types";
 import {END_TIMES, KITRoom} from "./types";
 import {Parser} from "./parser";
@@ -13,24 +13,6 @@ const CORS_PROXY_SERVER = "https://cors.taptwice.dev/request";
 const BASE_URL = "https://campus.kit.edu/sp/campus/all/extendedSearch.asp";
 const TERMS_URL = "https://campus.kit.edu/sp/server/services/kit/terms.asp";
 const ROOMS_URL = "https://campus.kit.edu/sp/server/services/kit/quicksearch.asp?type=room&find="
-
-const REQUEST_HEADERS = {
-    'authority': 'campus.kit.edu', 'method': 'POST',
-    'path': '/sp/campus/all/extendedSearch.asp', 'scheme': 'https',
-    'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-    'accept-encoding': 'gzip, deflate, br',
-    'accept-language': 'en,en-US;q=0.9,de;q=0.8,da;q=0.7,zh-CN;q=0.6,zh;q=0.5,es;q=0.4',
-    'cache-control': 'max-age=0', 'content-length': '452',
-    'content-type': 'application/x-www-form-urlencoded',
-    'cookie': 'session-campus-prod-sp=AWTAQSQRENGKPJNCGGLNAHJHCLCEPAMC',
-    'origin': 'https://campus.kit.edu',
-    'referer': 'https://campus.kit.edu/sp/campus/all/extendedSearch.asp',
-    'sec-ch-ua': '"Google Chrome";v="107", "Chromium";v="107", "Not=A?Brand";v="24"',
-    'sec-ch-ua-mobile': '?0', 'sec-ch-ua-platform': '"Windows"', 'sec-fetch-dest': 'iframe',
-    'sec-fetch-mode': 'navigate', 'sec-fetch-site': 'same-origin', 'sec-fetch-user': '?1',
-    'upgrade-insecure-requests': '1',
-    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64;x64) AppleWebKit / 537.36(KHTML, like Gecko) Chrome / 107.0.0.0 Safari / 537.36',
-};
 
 const DEFAULT_FORM_DATA: KITExtendedSearchFormData = {
     'search': 'Suchen',
@@ -44,24 +26,12 @@ const DEFAULT_FORM_DATA: KITExtendedSearchFormData = {
 
 let current_room_fetch_id = 0;
 
-interface RawTerm {
-    tstart: number,
-    tend: number,
-}
-
-interface Term {
-    start: Date,
-    end: Date,
-    id: string,
-}
-
-interface RawRoom {
-    id: string,
-    name: string,
-}
 
 const i_promise_terms = new Promise<Term[]>((resolve, reject) => {
-    make_request(TERMS_URL, {}, {}, false)
+    make_request(TERMS_URL, {
+        cache: true,
+        max_age: 60 * 60 * 24 // 1 day
+    })
         .then(response => response.json())
         .then((json: { [id: string]: RawTerm }) => {
             const terms = [];
@@ -103,20 +73,20 @@ const get_form_data_template = async (date: Date): Promise<KITExtendedSearchForm
 /**
  * Makes a request to the cors proxy to avoid CORS issues with the KIT endpoint.
  * @param url The url to make the request to.
- * @param form_data The form data to send.
- * @param headers The headers to send.
- * @param cache Whether to cache the response.
+ * @param params The parameters for the request.
  * @returns The response.
  *
  * @see https://github.com/MatthiasHarzer/minimal-cors-server
  */
-function make_request(url: string, form_data?: object, headers?: object, cache?: boolean): Promise<Response> {
+function make_request(url: string, params: RequestParams = {}): Promise<Response> {
+    const {form_data, headers, cache, max_age} = params;
     const body: CorsProxyBody = {
         method: "POST",
         url: url,
         data: form_data,
         headers: headers,
-        cache: cache ?? true
+        cache: cache ?? true,
+        max_age: max_age ?? 0,
     }
 
     return fetch(CORS_PROXY_SERVER, {
@@ -138,7 +108,10 @@ export const get_events = async (config: KITTimeEventsConfig): Promise<KITEvent[
     json_form_data.appointmenttimestart = config.time;
     json_form_data.appointmenttimeend = END_TIMES[config.time];
 
-    const response = await make_request(BASE_URL, json_form_data, REQUEST_HEADERS);
+    const response = await make_request(BASE_URL, {
+        form_data: json_form_data,
+        cache: true,
+    });
     const text = await response.text();
 
     const parser = new Parser(text);
@@ -160,7 +133,10 @@ export const get_room_events = async (config: KITRoomEventsConfig): Promise<KITE
 
     json_form_data.room = JSON.stringify(rooms);
 
-    const response = await make_request(BASE_URL, json_form_data, REQUEST_HEADERS);
+    const response = await make_request(BASE_URL, {
+        form_data: json_form_data,
+        cache: true,
+    });
     const text = await response.text();
 
     const parser = new Parser(text);
@@ -171,7 +147,10 @@ export const get_room_events = async (config: KITRoomEventsConfig): Promise<KITE
 export const find_rooms = async (search_term: string): Promise<KITRoom[] | null> => {
     let fetch_id = ++current_room_fetch_id;
     const query_url = `${ROOMS_URL}${search_term}`;
-    const response = await make_request(query_url, {}, {}, true);
+    const response = await make_request(query_url, {
+        cache: true,
+        max_age: 60 * 60 * 24 * 7 * 4 // 4 weeks
+    });
 
     if (fetch_id !== current_room_fetch_id) {
         return null;

@@ -2,7 +2,7 @@
 
     // import type {KITEvent} from "./api_handler";
 
-    import type {KITEvent, KITOccurrenceEventComparable, KITTimeEventsConfig} from "../types";
+    import type {KITEvent, KITOccurrenceEventComparable} from "../types";
     import {KIT_EVENT_TYPES_LOCALIZATION, KITEventOccurrence} from "../types";
 
     export let event: KITEvent;
@@ -42,7 +42,7 @@
     $:{
         if (selected) {
             if (element) {
-                element.scrollIntoView({behavior: "smooth", block: "nearest", inline: "nearest"});
+                element.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
             }
         }
     }
@@ -194,6 +194,8 @@
         color: #dedede;
         font-weight: 500;
         font-size: 0.9rem;
+        display: flex;
+        text-align: right;
     }
 
 
