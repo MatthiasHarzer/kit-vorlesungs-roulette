@@ -122,6 +122,7 @@ export class KITRoom {
 export interface KITOccurrenceEventComparable{
     day: Date;
     time?: string;
+    rooms?: KITRoom[];
 }
 
 export class KITEventOccurrence {
@@ -152,7 +153,10 @@ export class KITEventOccurrence {
     public matches(config: KITOccurrenceEventComparable): boolean {
         const config_week_day_short = config.day.toLocaleDateString("de-DE", {weekday: "short"});
         const config_date_formatted = format_date(config.day, DATE_FORMAT)
-        return this.week_day == config_week_day_short && (config.time == null || this.time_span.startsWith(config.time)) && (this.date == null || this.date == config_date_formatted);
+        return this.week_day == config_week_day_short &&
+            (config.time == null || this.time_span.startsWith(config.time)) &&
+            (this.date == null || this.date == config_date_formatted) &&
+            (config.rooms == null || config.rooms.some(room => room.id == this.room.id));
     }
 }
 
