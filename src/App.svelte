@@ -3,125 +3,44 @@
 
     import RoomEventsApp from "./lib/room_events/RoomEventsApp.svelte";
     import RouletteApp from "./lib/roulette/RouletteApp.svelte";
-
-    enum App {
-        Roulette = "roulette",
-        RoomEvents = "room-events"
-    }
-
-    let current_app = JSON.parse(localStorage.getItem("current_app") || "null") || App.Roulette;
-    // current_app = App.Roulette;
-
-    const enter_app = (app: App) => {
-        current_app = app;
-        localStorage.setItem("current_app", JSON.stringify(app));
-    }
-
-    enum ScrollDirection {
-        Horizontal,
-        Vertical
-    }
-
-    let track_start: number[] = null;
-    let track_delta_x: number = 0;
-    let view_width: number = 0;
-    let scroll_direction: ScrollDirection = null;
-
-    const SCROLL_Y_THRESHOLD = 50;
-    const SCROLL_X_MIN = 150;
+    import PageSlider from "./lib/components/slider/PageSlider.svelte";
+    import type {Page} from "./lib/components/slider/page";
 
 
-    const on_track_start = (e: TouchEvent) => {
-        track_start = [e.touches[0].clientX, e.touches[0].clientY];
-    }
+    const pages: Page[] = [
+        {
+            title: "Roulette",
+            component: RouletteApp,
+            icon: "casino"
+        },
+        {
+            title: "Room Events",
+            component: RoomEventsApp,
+            icon: "event"
+        },
+    ]
 
-    const on_track_end = (e: TouchEvent) => {
-        scroll_direction = null;
+    let current_page_index = JSON.parse(localStorage.getItem("current_page_index") || "null") ?? 0;
 
-        if (current_app === App.Roulette && track_delta_x < -SCROLL_X_MIN) {
-            enter_app(App.RoomEvents);
-        } else if (current_app == App.RoomEvents && track_delta_x > SCROLL_X_MIN) {
-            enter_app(App.Roulette);
-        } else {
-            enter_app(current_app);
-        }
+    $: localStorage.setItem("current_page_index", JSON.stringify(current_page_index));
 
-    }
-
-    const on_track = (e: TouchEvent) => {
-        const [start_x, start_y] = track_start;
-        if (scroll_direction === null) {
-            track_delta_x = e.touches[0].clientX - start_x;
-            const track_delta_y = e.touches[0].clientY - start_y;
-            scroll_direction = Math.abs(track_delta_x) > Math.abs(track_delta_y) ? ScrollDirection.Horizontal : ScrollDirection.Vertical;
-        }
-
-        if (scroll_direction === ScrollDirection.Horizontal) {
-            track_delta_x = e.touches[0].clientX - start_x;
-        } else {
-            track_delta_x = 0;
-        }
-
-    }
-
-    let offset: number = 0;
-
-    $:{
-        if (scroll_direction == null) {
-            offset = current_app === App.Roulette ? 0 : -view_width;
-            track_delta_x = 0;
-        } else {
-
-            if (current_app == App.Roulette) {
-                offset = Math.min(0, track_delta_x);
-            } else if (current_app == App.RoomEvents) {
-                offset = Math.max(0, track_delta_x) - view_width;
-            }
-        }
-
-
+    const set_app_index = (index: number) => {
+        current_page_index = index;
     }
 
 </script>
 
-<main bind:clientWidth={view_width} on:touchend={on_track_end} on:touchmove={on_track} on:touchstart={on_track_start}>
-
-    <div class="swipe-apps"
-         class:active-scroll={scroll_direction != null}
-         style="--offset: {offset}px;">
-        <div class="app">
-            <RouletteApp/>
-        </div>
-        <div class="app">
-            <RoomEventsApp/>
-        </div>
-    </div>
+<main>
+    <PageSlider bind:current_page_index {pages}/>
 
 
     <div class="nav">
         <div class="page-indicator-wrapper">
-
-            <div class="page-indicator roulette-app" class:active={current_app === App.Roulette}
-                 on:click={()=>enter_app(App.Roulette)}></div>
-            <div class="page-indicator room-events-app" class:active={current_app === App.RoomEvents}
-                 on:click={()=>enter_app(App.RoomEvents)}></div>
+            {#each pages as page, index}
+                <div class="page-indicator" class:active={current_page_index === index}
+                     on:click={()=>set_app_index(index)}></div>
+            {/each}
         </div>
-        <!--        <div class="nav-item roulette-app">-->
-        <!--            <button class="material text-button">-->
-        <!--                <span class="material-icons">-->
-        <!--                    casino-->
-        <!--                </span>-->
-        <!--                Roulette-->
-        <!--            </button>-->
-        <!--        </div>-->
-        <!--        <div class="nav-item room-app">-->
-        <!--            <button class="material text-button">-->
-        <!--                <span class="material-icons">-->
-        <!--                    casino-->
-        <!--                </span>-->
-        <!--                Room-->
-        <!--            </button>-->
-        <!--        </div>-->
     </div>
 </main>
 
@@ -131,42 +50,14 @@
         position: absolute;
         top: 0;
         left: 0;
-        width: 100vw;
-        height: 100vh;
+        width: 100%;
+        height: 100%;
         overflow: hidden;
         color: white;
         display: flex;
         flex-direction: column;
     }
 
-    .app-container {
-        position: relative;
-        flex: 1 0 0;
-    }
-
-    .swipe-apps {
-        position: absolute;
-        display: flex;
-        flex-direction: row;
-        width: 200vw;
-        height: 100%;
-
-        overflow: hidden;
-
-        right: calc(-100vw - var(--offset));
-        /*left: 100vw;*/
-        transition: right 0.2s ease-in-out;
-    }
-
-    .swipe-apps.active-scroll {
-        transition: none;
-    }
-
-    .app {
-        position: relative;
-        width: 100vw;
-        height: 100%;
-    }
 
     .page-indicator {
         width: 0.4rem;
@@ -210,9 +101,4 @@
         background-color: rgba(26, 26, 26, 0.71);
     }
 
-    /*.nav-item{*/
-    /*    flex: 1 0 0;*/
-    /*    display: flex;*/
-    /*    justify-content: center;*/
-    /*}*/
 </style>
