@@ -8,9 +8,17 @@
     export let pages: Page[];
     export let current_page_index: number = 0;
 
+    /**
+     * The slide progress is the current page index with a decimal, between 0 and pages.length - 1.
+     */
+    export let slide_progress: number = 0;
+
+    export let sliding: boolean = false;
+
 
     const MIN_SCROLL_FRACTION_FOR_CHANGE = 0.3;
     const MIN_SPEED_FOR_CHANGE = 0.7;
+    const PAGES_ENDS_TOLERANCE = 50; // px
 
 
     const on_release = () => {
@@ -49,11 +57,25 @@
 
     $: scroll_observer = create_scroll_observer(pages_element, {uni_directional: true});
 
+    $: {
+        sliding = $scroll_observer.direction !== null;
+    }
+
     $: if ($scroll_observer.direction !== null) {
-        total_offset = (current_page_index * width) - $scroll_observer.delta_x;
+        const wanted_offset = (current_page_index * width) - $scroll_observer.delta_x;
+        total_offset = Math.max(-PAGES_ENDS_TOLERANCE, Math.min(((pages.length - 1) * width) + PAGES_ENDS_TOLERANCE, wanted_offset));
         last_event = $scroll_observer;
     }else{
         total_offset = current_page_index * width;
+    }
+
+    $: {
+        total_offset;
+
+        // This is to prevent slide_progress not updating due to update order
+        setTimeout(()=>{
+            slide_progress = total_offset / width;
+        })
     }
 
     $: if ($scroll_observer.direction === null && last_event !== null) on_release();
@@ -73,7 +95,7 @@
 <style>
 
     .main {
-        position: absolute;
+        position: relative;
         height: 100%;
         width: 100%;
     }
