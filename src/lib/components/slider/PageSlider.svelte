@@ -1,7 +1,5 @@
 <script lang="ts">
     import type {Page} from "./page";
-    import type {ScrollObserver, ScrollObserverEvent} from "./scroll_observer";
-    import {create_scroll_observer} from "./scroll_observer";
     import {onMount} from "svelte";
 
 
@@ -11,116 +9,129 @@
     /**
      * The slide progress is the current page index with a decimal, between 0 and pages.length - 1.
      */
-    export let slide_progress: number = 0;
+    export let total_slide_progress: number = 0;
 
-    export let sliding: boolean = false;
-
-
-    const MIN_SCROLL_FRACTION_FOR_CHANGE = 0.3;
-    const MIN_SPEED_FOR_CHANGE = 0.7;
-    const PAGES_ENDS_TOLERANCE = 50; // px
+    /**
+     * The relative slide progress is the slide progress between two pages. It is between 0 and 1.
+     */
+    export let relative_slide_progress: number = 0;
 
 
-    const on_release = () => {
-        const scroll_fraction = Math.abs(last_event.delta_x / width);
-        if (scroll_fraction >= MIN_SCROLL_FRACTION_FOR_CHANGE || Math.abs(last_event.speed_x) >= MIN_SPEED_FOR_CHANGE) {
-            if (last_event.delta_x > 0) {
-                current_page_index = Math.max(0, current_page_index - 1);
-            } else {
-                current_page_index = Math.min(pages.length - 1, current_page_index + 1);
-            }
-        }
-        last_event = null;
-
-        // I don't know why svelte doesn't update the value of total_offset without this
-        total_offset = current_page_index * width;
-    }
-
-    onMount(()=>{
-        if(current_page_index >= pages.length){
+    onMount(() => {
+        if (current_page_index >= pages.length) {
             current_page_index = pages.length - 1;
         }
 
         // This is to prevent the animation from triggering when the page is first loaded
-        setTimeout(()=>{
-            animation = true;
+        setTimeout(() => {
+            animated = true;
+            mounted = true;
         }, 100);
+
+        pages_element.onscroll = (e: Event) => {
+            offset = pages_element.scrollLeft;
+        }
     });
 
-
-    let last_event: ScrollObserverEvent = null;
     let width = 0;
     let pages_element: HTMLElement;
-    let scroll_observer: ScrollObserver;
-    let total_offset: number = 0;
-    let animation = false;
+    let animated = false;
+    let offset = 0;
+    let mounted = false;
 
-    $: scroll_observer = create_scroll_observer(pages_element, {uni_directional: true});
 
-    $: {
-        sliding = $scroll_observer.direction !== null;
+    $: if (pages[current_page_index]?.element) {
+        pages[current_page_index].element.scrollIntoView();
     }
 
-    $: if ($scroll_observer.direction !== null) {
-        const wanted_offset = (current_page_index * width) - $scroll_observer.delta_x;
-        total_offset = Math.max(-PAGES_ENDS_TOLERANCE, Math.min(((pages.length - 1) * width) + PAGES_ENDS_TOLERANCE, wanted_offset));
-        last_event = $scroll_observer;
-    }else{
-        total_offset = current_page_index * width;
+
+    $: if(mounted) {
+        total_slide_progress = offset / width;
+
+        relative_slide_progress = total_slide_progress - Math.floor(total_slide_progress);
+
+        if (total_slide_progress - Math.floor(total_slide_progress) == 0)
+            current_page_index = Math.floor(total_slide_progress);
+
     }
 
-    $: {
-        total_offset;
 
-        // This is to prevent slide_progress not updating due to update order
-        setTimeout(()=>{
-            slide_progress = total_offset / width;
-        })
-    }
-
-    $: if ($scroll_observer.direction === null && last_event !== null) on_release();
 </script>
 
-<div bind:clientWidth={width} class="main">
-    <div bind:this={pages_element} class="pages" class:animation={$scroll_observer.direction === null && animation}
-         style="--target-offset: {total_offset}px;">
-        {#each pages as page}
-            <div class="page" style="--width: {width}px;">
-                <svelte:component this={page.component}/>
-            </div>
-        {/each}
-    </div>
+<div bind:clientWidth={width} bind:this={pages_element} class="main" class:animated>
+    <!--    <div bind:this={pages_element} class="pages" class:animation={$scroll_observer.direction === null && animation}-->
+    <!--         style="&#45;&#45;target-offset: {total_offset}px;">-->
+    {#each pages as page}
+        <div class="page" style="--width: {width}px;" bind:this={page.element}>
+            <svelte:component this={page.component}/>
+        </div>
+    {/each}
+    <!--    </div>-->
 </div>
 
 <style>
 
+    /*.main {*/
+    /*    position: relative;*/
+    /*    height: 100%;*/
+    /*    width: 100%;*/
+    /*}*/
+
     .main {
-        position: relative;
+        /*position: absolute;*/
+        /*height: 100%;*/
+        /*!*width: 100%;*!*/
+        /*!*right: -150%;*!*/
+        /*left: calc(var(--target-offset) * -1);*/
+        /*display: flex;*/
+        /*flex-direction: row;*/
+        /*transition: none;*/
+        display: flex;
+
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+
+        scroll-behavior: auto;
+
+        -webkit-overflow-scrolling: touch;
+
         height: 100%;
         width: 100%;
+
     }
 
-    .pages {
-        position: absolute;
-        height: 100%;
-        /*width: 100%;*/
-        /*right: -150%;*/
-        left: calc(var(--target-offset) * -1);
-        display: flex;
-        flex-direction: row;
-        transition: none;
+    .main.animated {
+        scroll-behavior: smooth;
+    }
+
+    .main::-webkit-scrollbar {
+        display: none;
     }
 
     .pages.animation {
-        transition: left 0.2s ease-in-out;
+        /*transition: left 0.2s ease-in-out;*/
     }
 
     .page {
+        /*position: relative;*/
+
+        /*height: 100%;*/
+        /*width: var(--width);*/
+        /*background-color: var(--color);*/
+        scroll-snap-align: start;
+        flex-shrink: 0;
+
+        width: 100%;
+        height: 100%;
+        transform-origin: center center;
+        transform: scale(1);
+        transition: transform 0.5s;
         position: relative;
 
-        height: 100%;
-        width: var(--width);
-        /*background-color: var(--color);*/
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /*font-size: 100px;*/
     }
 
 </style>
