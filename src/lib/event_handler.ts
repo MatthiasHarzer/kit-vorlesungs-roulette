@@ -124,6 +124,10 @@ export const get_events = async (config: KITTimeEventsConfig): Promise<KITEvent[
     return events.filter((event) => config.types.includes(event.type));
 }
 
+/**
+ * Returns all events matching the kit room events config.
+ * @param config The config.
+ */
 export const get_room_events = async (config: KITRoomEventsConfig): Promise<KITEvent[]> => {
     const json_form_data = await get_form_data_template(config.day);
 
@@ -145,7 +149,10 @@ export const get_room_events = async (config: KITRoomEventsConfig): Promise<KITE
     return parser.get_all_events().filter((event) => event.occurrences.some(occ => occ.matches(config)));
 }
 
-
+/**
+ * Finds rooms matching the search term.
+ * @param search_term The search term.
+ */
 export const find_rooms = async (search_term: string): Promise<KITRoom[] | null> => {
     let fetch_id = ++current_room_fetch_id;
     const query_url = `${ROOMS_URL}${search_term}`;

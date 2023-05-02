@@ -1,18 +1,11 @@
 import {KIT_DAY_TIME_REGEX, KIT_UID_REGEX, KIT_GGUID_GROUP_REGEX} from "./consts";
 import {KIT_ENDPOINT_EVENT_TYPES_MAP, KITEvent, KITEventOccurrence, KITEventType, KITRoom} from "./types";
-import * as util from "./util/util";
 
 
 interface RawEventDataItem {
     event_element: Element;
     event_occurrences: Element[];
 }
-
-interface ParserArgs {
-    target_time?: string;
-    target_room_id?: string;
-}
-
 /**
  * The KIT events parser. Parses raw HTML from the KIT CMS and returns KIT events.
  */
@@ -141,20 +134,8 @@ export class Parser {
         return this.get_all_events_from_raw_data_items(raw_events).filter((event)=>event.occurrences.length > 0);
     }
 
-    // public get_all_events_with_day = (day: Date): KITEvent[] => {
-    //     const events = this.get_all_events();
-    //     const day_short_hand = day.toLocaleDateString("de-DE", {weekday: "short"});
-    // }
 
-
-    /**
-     * Returns all events from the parsed HTML that have a room.
-     */
-    // public get_all_events_with_valid_room = (): KITEvent[] => {
-    //     return this.get_all_events().filter((event) => event.room !== null);
-    // }
-
-    private parse = () => {
+    private parse = (): Document => {
         const parser = new DOMParser();
         return parser.parseFromString(this.raw_html, "text/html");
     }

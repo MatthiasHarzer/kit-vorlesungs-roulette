@@ -1,6 +1,7 @@
 <script lang="ts">
     import type {Page} from "./page";
     import {onMount} from "svelte";
+    import PageSliderNav from "./PageSliderNav.svelte";
 
 
     export let pages: Page[];
@@ -16,6 +17,8 @@
      */
     export let relative_slide_progress: number = 0;
 
+    export let show_navigation: boolean = false;
+
 
     onMount(() => {
         if (current_page_index >= pages.length) {
@@ -24,28 +27,26 @@
 
         // This is to prevent the animation from triggering when the page is first loaded
         setTimeout(() => {
-            animated = true;
             mounted = true;
         }, 100);
 
-        pages_element.onscroll = (e: Event) => {
+        pages_element.onscroll = (_: Event) => {
             offset = pages_element.scrollLeft;
         }
     });
 
     let width = 0;
     let pages_element: HTMLElement;
-    let animated = false;
     let offset = 0;
     let mounted = false;
 
 
-    $: if (pages[current_page_index]?.element) {
+    $: if (pages && pages[current_page_index]?.element) {
         pages[current_page_index].element.scrollIntoView();
     }
 
 
-    $: if(mounted) {
+    $: if (mounted) {
         total_slide_progress = offset / width;
 
         relative_slide_progress = total_slide_progress - Math.floor(total_slide_progress);
@@ -58,34 +59,31 @@
 
 </script>
 
-<div bind:clientWidth={width} bind:this={pages_element} class="main" class:animated>
-    <!--    <div bind:this={pages_element} class="pages" class:animation={$scroll_observer.direction === null && animation}-->
-    <!--         style="&#45;&#45;target-offset: {total_offset}px;">-->
-    {#each pages as page}
-        <div class="page" style="--width: {width}px;" bind:this={page.element}>
-            <svelte:component this={page.component}/>
+<div class="main">
+    <div bind:clientWidth={width} bind:this={pages_element} class="slides" class:animated={mounted}>
+        {#each pages as page}
+            <div class="page" bind:this={page.element}>
+                <svelte:component this={page.component}/>
+            </div>
+        {/each}
+    </div>
+    {#if show_navigation}
+        <div class="nav">
+            <PageSliderNav {pages} bind:total_slide_progress bind:relative_slide_progress bind:current_page_index/>
         </div>
-    {/each}
-    <!--    </div>-->
+    {/if}
 </div>
 
 <style>
-
-    /*.main {*/
-    /*    position: relative;*/
-    /*    height: 100%;*/
-    /*    width: 100%;*/
-    /*}*/
-
     .main {
-        /*position: absolute;*/
-        /*height: 100%;*/
-        /*!*width: 100%;*!*/
-        /*!*right: -150%;*!*/
-        /*left: calc(var(--target-offset) * -1);*/
-        /*display: flex;*/
-        /*flex-direction: row;*/
-        /*transition: none;*/
+        height: 100%;
+        width: 100%;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .slides {
         display: flex;
 
         overflow-x: auto;
@@ -98,40 +96,37 @@
         height: 100%;
         width: 100%;
 
+        /*flex: auto;*/
+
     }
 
-    .main.animated {
+    .slides.animated {
         scroll-behavior: smooth;
     }
 
-    .main::-webkit-scrollbar {
+    .slides::-webkit-scrollbar {
         display: none;
     }
 
-    .pages.animation {
-        /*transition: left 0.2s ease-in-out;*/
-    }
 
     .page {
-        /*position: relative;*/
-
-        /*height: 100%;*/
-        /*width: var(--width);*/
-        /*background-color: var(--color);*/
         scroll-snap-align: start;
         flex-shrink: 0;
 
         width: 100%;
         height: 100%;
-        transform-origin: center center;
-        transform: scale(1);
-        transition: transform 0.5s;
         position: relative;
 
         display: flex;
         justify-content: center;
         align-items: center;
-        /*font-size: 100px;*/
+    }
+
+    .nav {
+        position: relative;
+        width: 100%;
+        height: 3rem;
+        flex: auto;
     }
 
 </style>
