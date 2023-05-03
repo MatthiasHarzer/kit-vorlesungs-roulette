@@ -48,14 +48,14 @@
             <div class="day item">
                 <span class="key">Tag</span>
                 <span class="value">
-                    <DaySelect bind:date={config.day} />
-<!--                    <DateInput bind:value={config.day} format="yyyy-MM-dd" closeOnSelection={true}/>-->
+                    <DaySelect bind:date={config.day}/>
+                    <!--                    <DateInput bind:value={config.day} format="yyyy-MM-dd" closeOnSelection={true}/>-->
                 </span>
             </div>
             <div class="day item">
                 <span class="key">Zeit</span>
                 <span class="value">
-                        <select name="time" id="time" bind:value={config.time} class="dark-select">
+                        <select bind:value={config.time} class="dark-select" id="time" name="time">
                             {#each VALID_TIMES as time}
                                 <option value={time}>{time} Uhr</option>
                             {/each}
@@ -75,17 +75,21 @@
                     {/each}
                 </span>
             </div>
-            <div class="footer">
-                <button class="clear box-shadow" on:click={submit}>
-                    Anwenden
-                </button>
-            </div>
+        </div>
+        <div class="footer">
+            <button class="clear box-shadow" on:click={submit}>
+                Anwenden
+            </button>
         </div>
     </div>
 
 </div>
 
 <style>
+    .dialog {
+        max-height: 90%;
+    }
+
     .content {
         padding: 0 1rem;
         width: 90%;
@@ -99,7 +103,7 @@
         padding: 0.5rem;
     }
 
-    .value{
+    .value {
         overflow: auto;
     }
 
