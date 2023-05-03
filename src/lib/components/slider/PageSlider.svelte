@@ -125,7 +125,7 @@
     .nav {
         position: relative;
         width: 100%;
-        height: 3rem;
+        /*height: 3rem;*/
         flex: auto;
     }
 

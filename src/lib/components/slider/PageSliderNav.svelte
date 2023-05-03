@@ -63,8 +63,8 @@
         box-shadow: 0 0 1rem rgba(255, 255, 255, 0.5);
     }
 
-
     .nav-item-btn {
+
         display: flex;
         flex: 1 0;
         flex-direction: row;
@@ -74,7 +74,7 @@
         cursor: pointer;
         transition: background-color 0.2s ease-in-out;
         position: relative;
-        height: 100%;
+        /*height: 100%;*/
 
     }
 
@@ -95,7 +95,7 @@
 
         pointer-events: none;
         position: absolute;
-        bottom: 0;
+        top: 0;
         left: calc(var(--progress-offset) * (var(--width)));
 
         height: 100%;
