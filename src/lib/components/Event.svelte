@@ -46,7 +46,6 @@
             }
         }
     }
-
 </script>
 
 
@@ -60,6 +59,9 @@
     {:else}
         <h4><a href="{event.link}" target="_blank">
             {event.title}
+            {#if target_occurrence.note}
+                <span class="event-note">({target_occurrence.note})</span>
+                {/if}
             <span class="material-icons">
             open_in_new
         </span>
@@ -124,6 +126,10 @@
         font-weight: 500;
         text-transform: uppercase;
         word-wrap: break-word;
+    }
+
+    .event-note{
+        text-transform: none;
     }
 
     .material-icons {

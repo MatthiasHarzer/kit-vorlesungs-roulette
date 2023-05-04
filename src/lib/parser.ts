@@ -80,13 +80,16 @@ export class Parser {
                 room = this.get_or_create_room(room_id, room_name);
             }
 
-            const [, week_day, , date, time] = match;
+
+            const [, week_day,  , date, , only_every_second_week, time] = match;
+            // console.log(week_day, date, only_every_second_week, time);
 
             const occurrence = new KITEventOccurrence(
                 room,
                 time,
                 week_day,
-                date
+                date,
+                only_every_second_week
             )
 
             occurrences.push(occurrence);

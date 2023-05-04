@@ -130,6 +130,7 @@ export class KITEventOccurrence {
     week_day: string;
     time_span: string;
     room?: KITRoom;
+    note?: string;
 
     public get time_start(): string {
         return this.time_span.split("-")[0];
@@ -139,11 +140,12 @@ export class KITEventOccurrence {
         return time_to_total_seconds(this.time_start);
     }
 
-    constructor(room: KITRoom, time_span: string, week_day: string, date?: string) {
+    constructor(room: KITRoom, time_span: string, week_day: string, date?: string, note?: string    ) {
         this.room = room;
         this.time_span = time_span;
         this.week_day = week_day;
         this.date = date;
+        this.note = note;
     }
 
     /**
@@ -153,6 +155,7 @@ export class KITEventOccurrence {
     public matches(config: KITOccurrenceEventComparable): boolean {
         const config_week_day_short = config.day.toLocaleDateString("de-DE", {weekday: "short"});
         const config_date_formatted = format_date(config.day, DATE_FORMAT)
+
         return this.week_day == config_week_day_short &&
             (config.time == null || this.time_span.startsWith(config.time)) &&
             (this.date == null || this.date == config_date_formatted) &&

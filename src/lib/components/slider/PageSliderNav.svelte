@@ -74,7 +74,7 @@
         cursor: pointer;
         transition: background-color 0.2s ease-in-out;
         position: relative;
-        /*height: 100%;*/
+        height: 100%;
 
     }
 
