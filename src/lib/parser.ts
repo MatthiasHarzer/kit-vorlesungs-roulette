@@ -6,6 +6,7 @@ interface RawEventDataItem {
     event_element: Element;
     event_occurrences: Element[];
 }
+
 /**
  * The KIT events parser. Parses raw HTML from the KIT CMS and returns KIT events.
  */
@@ -73,7 +74,7 @@ export class Parser {
             const match = day_time.match(KIT_DAY_TIME_REGEX);
             if (match == null) continue;
 
-            if(room_element !== null){
+            if (room_element !== null) {
                 const room_name = room_element?.textContent;
                 const room_gguid_match = room_element.getAttribute("href")?.match(KIT_GGUID_GROUP_REGEX);
                 const room_id = room_gguid_match ? room_gguid_match[1] : room_name;
@@ -81,7 +82,7 @@ export class Parser {
             }
 
 
-            const [, week_day,  , date, , only_every_second_week, time] = match;
+            const [, week_day, , date, , only_every_second_week, time] = match;
             // console.log(week_day, date, only_every_second_week, time);
 
             const occurrence = new KITEventOccurrence(
@@ -111,7 +112,7 @@ export class Parser {
             return null;
         }
 
-        const [, , title, lecturer, , typeShort, format, ,] = children;
+        const [, , title, , lecturer, , typeShort, , format] = children;
 
         return new KITEvent(
             id,
@@ -134,7 +135,7 @@ export class Parser {
     public get_all_events = (): KITEvent[] => {
         const doc = this.parse();
         const raw_events = this.get_raw_event_items(doc);
-        return this.get_all_events_from_raw_data_items(raw_events).filter((event)=>event.occurrences.length > 0);
+        return this.get_all_events_from_raw_data_items(raw_events).filter((event) => event.occurrences.length > 0);
     }
 
 
