@@ -39,24 +39,30 @@
     let pages_element: HTMLElement;
     let offset = 0;
     let mounted = false;
-
+    let previous_page_index = 0;
+    let page_index_diff = 1;
 
     $: if (pages && pages[current_page_index]?.element) {
         pages[current_page_index].element.scrollIntoView();
+    }
+
+    $: if (current_page_index != previous_page_index) {
+        page_index_diff = current_page_index - previous_page_index;
+        previous_page_index = current_page_index;
     }
 
 
     $: if (mounted) {
         total_slide_progress = offset / width;
 
-        relative_slide_progress = total_slide_progress - Math.floor(total_slide_progress);
-
-        if (total_slide_progress - Math.floor(total_slide_progress) == 0)
-            current_page_index = Math.floor(total_slide_progress);
+        if (Math.abs(total_slide_progress - Math.round(total_slide_progress)) < 0.001){
+            current_page_index = Math.round(total_slide_progress);
+            page_index_diff = 1;
+        }
 
     }
 
-
+    $: relative_slide_progress = ((total_slide_progress + page_index_diff) - current_page_index) / page_index_diff;
 </script>
 
 <div class="main">
@@ -69,7 +75,8 @@
     </div>
     {#if show_navigation}
         <div class="nav">
-            <PageSliderNav {pages} bind:total_slide_progress bind:relative_slide_progress bind:current_page_index/>
+            <PageSliderNav {pages} bind:total_slide_progress bind:relative_slide_progress bind:current_page_index
+                           bind:page_index_diff/>
         </div>
     {/if}
 </div>

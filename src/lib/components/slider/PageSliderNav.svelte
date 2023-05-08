@@ -6,6 +6,7 @@
     export let current_page_index = 0;
     export let total_slide_progress = 0;
     export let relative_slide_progress = 0;
+    export let page_index_diff = 0;
 
     let nav_element_width = 0;
 
@@ -16,7 +17,8 @@
     $: active_indicator_style =
         `--progress-offset: ${total_slide_progress};` +
         `--width: ${nav_element_width}px;` +
-        `--relative-slide-progress: ${relative_slide_progress};`;
+        `--relative-slide-progress: ${relative_slide_progress};` +
+        `--page-index-difference: ${Math.abs(page_index_diff)}`;
 </script>
 
 <div class="main">
@@ -108,14 +110,14 @@
         z-index: 1;
     }
 
+    /*noinspection CssUnresolvedCustomProperty*/
     .active-indicator .blob {
-
         position: relative;
         bottom: 0;
         left: 0;
         height: 0.3rem;
-        width: calc(var(--relative-slide-progress-sined-abs) * (70% - 3rem) + 3rem);
-        /*                                    Max width of blob ↗                ↖ Min Width of blob */
+        width: calc(var(--relative-slide-progress-sined-abs) * (70% * var(--page-index-difference) - 3rem) + 3rem);
+        /*                                    Max width of blob ↗                         Min Width of blob ↗   */
         background-color: #eaeaea;
         border-radius: 1rem 1rem 0 0;
     }
