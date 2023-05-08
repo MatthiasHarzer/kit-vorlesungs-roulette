@@ -41,6 +41,8 @@
     let mounted = false;
     let previous_page_index = 0;
     let page_index_diff = 1;
+    let timeout;
+    let last_total_slide_progress;
 
     $: if (pages && pages[current_page_index]?.element) {
         pages[current_page_index].element.scrollIntoView();
@@ -54,12 +56,15 @@
 
     $: if (mounted) {
         total_slide_progress = offset / width;
+        last_total_slide_progress = total_slide_progress;
 
-        if (Math.abs(total_slide_progress - Math.round(total_slide_progress)) < 0.001){
-            current_page_index = Math.round(total_slide_progress);
-            page_index_diff = 1;
-        }
-
+        timeout && clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            if (last_total_slide_progress == total_slide_progress) {
+                current_page_index = Math.round(total_slide_progress);
+                page_index_diff = 1;
+            }
+        }, 100);
     }
 
     $: relative_slide_progress = ((total_slide_progress + page_index_diff) - current_page_index) / page_index_diff;
