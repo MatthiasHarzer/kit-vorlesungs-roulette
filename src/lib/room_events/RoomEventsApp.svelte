@@ -7,6 +7,7 @@
     import {find_rooms, get_room_events} from "../event_handler";
     import Event from "../components/Event.svelte";
     import DaySelect from "../components/DaySelect.svelte";
+    import RetryButton from "../components/RetryButton.svelte";
 
     const TYPE_TIMEOUT = 200; // ms
 
@@ -69,16 +70,25 @@
         localStorage.setItem("cached_rooms", JSON.stringify(config.rooms));
     }
 
-    $: {
+    const fetch_events = () => {
         i_promise_events = new Promise<KITEvent[]>(async (res, rej) => {
             if (config.rooms.length === 0) res([]);
-            const events = await get_room_events(config);
-            events.sort((a, b) => {
-                return a.occurrences.find(occ => occ.matches(config))?.time_start_as_total_seconds -
-                    b.occurrences.find(occ => occ.matches(config))?.time_start_as_total_seconds;
-            });
-            res(events);
+            try {
+                const events = await get_room_events(config);
+                events.sort((a, b) => {
+                    return a.occurrences.find(occ => occ.matches(config))?.time_start_as_total_seconds -
+                        b.occurrences.find(occ => occ.matches(config))?.time_start_as_total_seconds;
+                });
+                res(events);
+            } catch (e) {
+                rej(e);
+            }
         });
+    }
+
+    $: {
+        config;
+        fetch_events();
     }
 
 </script>
@@ -90,7 +100,7 @@
     <div class="content">
         <div class="config">
             <div class="day-select">
-                <DaySelect bind:date={config.day} />
+                <DaySelect bind:date={config.day}/>
             </div>
             {#if config.rooms.length > 0}
                 <div class="selected-rooms-header">
@@ -144,7 +154,10 @@
                 </div>
             {/if}
         {:catch error}
-            <div class="error">{error}</div>
+            <div class="error-snippet">
+                <p>{error}</p>
+                <RetryButton on:click={fetch_events}/>
+            </div>
         {/await}
         <CreditFooter/>
 

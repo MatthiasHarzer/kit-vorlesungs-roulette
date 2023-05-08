@@ -111,7 +111,7 @@ export const get_events = async (config: KITTimeEventsConfig): Promise<KITEvent[
     const response = await make_request(BASE_URL, {
         form_data: json_form_data,
         cache: true,
-        max_age: 60 * 60 * 24 * 3 // 3 days 
+        max_age: 60 * 60 * 24 * 3 // 3 days
     });
     const text = await response.text();
 

@@ -13,6 +13,7 @@
     import {KITEventType} from "../types";
     import CreditFooter from "../components/CreditFooter.svelte";
     import "../app_style.css";
+    import RetryButton from "../components/RetryButton.svelte";
 
 
 
@@ -45,13 +46,18 @@
         remaining_indexes = [...available_indexes];
     }
 
-    $:{
-        selected_event_index = -1;
+    const fetch_events = () =>{
         i_promise_events = get_events(config);
         i_promise_events.then(events => {
             available_events = events;
             resets_indexes(); // Needs to be a method call to prevent svelte from calling this block every time the array is modified
         });
+    }
+
+    $:{
+        selected_event_index = -1;
+        config; // Needed to trigger the watcher
+        fetch_events();
     }
 
     let selected_event_index = -1;
@@ -83,19 +89,10 @@
     }
 
     const submit_config = (event) => {
-
         config = event.detail;
         localStorage.setItem("types", JSON.stringify(config.types));
         close_config_panel();
     }
-
-    const p = new Promise((resolve, reject) => {
-        // i_promise_events.then((events) => {
-        // 	resolve(events);
-        // });
-    });
-
-
 </script>
 
 <div class="main app-page">
@@ -161,7 +158,10 @@
                 </div>
             {/if}
         {:catch error}
-            <div class="error">{error}</div>
+            <div class="error-snippet">
+                <p>{error}</p>
+                <RetryButton on:click={fetch_events} />
+            </div>
         {/await}
         <CreditFooter />
 
@@ -179,8 +179,6 @@
 
 
 <style>
-
-
     .config .text {
         text-align: center;
         font-size: 1.1em;
@@ -223,8 +221,6 @@
         margin: 0 auto;
     }
 
-
-
     .randomize {
         display: flex;
         align-items: center;
@@ -255,12 +251,6 @@
         z-index: 1;
     }
 
-    /*.randomize-btn span{*/
-    /*    background-color: transparent;*/
-    /*}*/
-
-
-
     .events {
         /*height: 100%;*/
         width: 100%;
@@ -275,8 +265,6 @@
         /*grid-template-rows: minmax(100px, auto);*/
         /*grid-auto-rows: 5px;*/
     }
-
-
 
     .dark-background {
         position: absolute;
