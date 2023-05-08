@@ -1,4 +1,10 @@
-import {KIT_DAY_TIME_REGEX, KIT_UID_REGEX, KIT_GGUID_GROUP_REGEX} from "./consts";
+import {
+    KIT_EVENT_DATE_OCCURRENCE_REGEX,
+    KIT_EVENT_FIXED_DATE_REGEX,
+    KIT_EVENT_ONLY_EVERY_SECOND_WEEK_LABEL,
+    KIT_GGUID_GROUP_REGEX,
+    KIT_UID_REGEX
+} from "./consts";
 import {KIT_ENDPOINT_EVENT_TYPES_MAP, KITEvent, KITEventOccurrence, KITEventType, KITRoom} from "./types";
 
 
@@ -64,15 +70,19 @@ export class Parser {
             const inner_element = element.children[1];
 
             const date_element = inner_element.querySelector(".date");
+            const time_element = inner_element.querySelector(".time");
             const room_element = inner_element.querySelector(".room");
+            const comment_element = inner_element.querySelector(".comment");
 
             let room: KITRoom | null = null;
 
-            if (date_element === null) continue;
+            const date_occurrence_match = date_element?.textContent?.match(KIT_EVENT_DATE_OCCURRENCE_REGEX);
 
-            const day_time = date_element.textContent;
-            const match = day_time.match(KIT_DAY_TIME_REGEX);
-            if (match == null) continue;
+            if (date_occurrence_match === null || time_element === null) continue;
+
+            const [, week_day, event_occurrence] = date_occurrence_match;
+            const date = event_occurrence.match(KIT_EVENT_FIXED_DATE_REGEX) ? event_occurrence : null;
+
 
             if (room_element !== null) {
                 const room_name = room_element?.textContent;
@@ -81,16 +91,13 @@ export class Parser {
                 room = this.get_or_create_room(room_id, room_name);
             }
 
-
-            const [, week_day, , date, , only_every_second_week, time] = match;
-            // console.log(week_day, date, only_every_second_week, time);
-
             const occurrence = new KITEventOccurrence(
                 room,
-                time,
+                time_element?.textContent,
                 week_day,
                 date,
-                only_every_second_week
+                event_occurrence === KIT_EVENT_ONLY_EVERY_SECOND_WEEK_LABEL,
+                comment_element?.textContent
             )
 
             occurrences.push(occurrence);

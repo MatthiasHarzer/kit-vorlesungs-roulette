@@ -59,14 +59,22 @@
     {:else}
         <h4><a href="{event.link}" target="_blank">
             {event.title}
-            {#if target_occurrence.note}
-                <span class="event-note">({target_occurrence.note})</span>
+            {#if target_occurrence.only_every_second_week}
+                <span class="event-only-every-second-week-note">(14-täglich)</span>
                 {/if}
             <span class="material-icons">
             open_in_new
         </span>
         </a></h4>
         <hr>
+        {#if target_occurrence.comment}
+            <div class="comment">
+                <span class="material-icons-outlined">
+                    info
+                </span>
+                <span class="comment-text">{target_occurrence.comment}</span>
+            </div>
+            {/if}
         <div class="time-room">
             <span class="time">{target_occurrence.time_span}</span>
             <!--        <span class="label">in Room: </span>-->
@@ -128,11 +136,15 @@
         word-wrap: break-word;
     }
 
-    .event-note{
+    .event-only-every-second-week-note{
         text-transform: none;
     }
 
-    .material-icons {
+    .comment > *{
+        color: #efefef;
+    }
+
+    .material-icons, .material-icons-outlined {
         font-size: 1.2rem;
         vertical-align: middle;
     }
@@ -176,6 +188,7 @@
 
     .room a {
         color: #ff9a59;
+        text-shadow: 0 0 2px #6b6b6b;
     }
 
     .footer {

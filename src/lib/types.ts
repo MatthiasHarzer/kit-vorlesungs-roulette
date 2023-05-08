@@ -29,7 +29,7 @@ export interface CorsProxyBody {
  * The KIT event type.
  */
 export enum KITEventType {
-    Vorlesung= "v",
+    Vorlesung = "v",
     VorlesungUebung = "vue",
     Tutorium = "tu",
     Uebung = "ue",
@@ -119,7 +119,7 @@ export class KITRoom {
     }
 }
 
-export interface KITOccurrenceEventComparable{
+export interface KITOccurrenceEventComparable {
     day: Date;
     time?: string;
     rooms?: KITRoom[];
@@ -129,8 +129,10 @@ export class KITEventOccurrence {
     date?: string;
     week_day: string;
     time_span: string;
+    only_every_second_week: boolean;
     room?: KITRoom;
-    note?: string;
+    comment?: string;
+
 
     public get time_start(): string {
         return this.time_span.split("-")[0];
@@ -140,12 +142,13 @@ export class KITEventOccurrence {
         return time_to_total_seconds(this.time_start);
     }
 
-    constructor(room: KITRoom, time_span: string, week_day: string, date?: string, note?: string    ) {
+    constructor(room: KITRoom, time_span: string, week_day: string, date?: string, only_every_second_week: boolean = false, comment?: string) {
         this.room = room;
         this.time_span = time_span;
         this.week_day = week_day;
         this.date = date;
-        this.note = note;
+        this.comment = comment;
+        this.only_every_second_week = only_every_second_week;
     }
 
     /**
