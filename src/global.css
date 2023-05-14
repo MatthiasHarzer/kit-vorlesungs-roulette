@@ -1,6 +1,8 @@
 @font-face {
     font-family: Karla;
     src: url(assets/Karla.ttf);
+
+    font-display: swap;
 }
 
 @font-face {
@@ -10,6 +12,8 @@
     src: local('Material Icons'),
     local('MaterialIcons-Regular'),
     url(assets/icon_font/MaterialIcons-Regular.ttf) format('truetype');
+
+    font-display: swap;
 }
 @font-face {
     font-family: 'Material Icons Outlined';
@@ -18,6 +22,8 @@
     src: local('Material Icons'),
     local('MaterialIcons-Regular'),
     url(assets/icon_font/MaterialIconsOutlined-Regular.otf) format('truetype');
+
+    font-display: swap;
 }
 
 .material-icons, .material-icons-outlined {

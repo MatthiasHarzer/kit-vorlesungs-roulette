@@ -9,7 +9,7 @@ import type {
 import {END_TIMES, KITRoom} from "./types";
 import {Parser} from "./parser";
 
-const CORS_PROXY_SERVER = "https://cors.taptwice.dev/request";
+const CORS_PROXY_SERVER = "https://cors.taptwice.dev/";
 const BASE_URL = "https://campus.kit.edu/sp/campus/all/extendedSearch.asp";
 const TERMS_URL = "https://campus.kit.edu/sp/server/services/kit/terms.asp";
 const ROOMS_URL = "https://campus.kit.edu/sp/server/services/kit/quicksearch.asp?type=room&find="

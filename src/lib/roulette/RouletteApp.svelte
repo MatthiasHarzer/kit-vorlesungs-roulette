@@ -99,9 +99,9 @@
     <div class="app-bar">
         <span class="title">KIT Vorlesungs Roulette</span>
         <div class="randomize">
-            <img src={arrow} alt="->" class="arrow"/>
+            <img src={arrow} alt="->" class="arrow" height="214" width="488"/>
             <button class="material randomize-btn" on:click={select_random_event}>
-                <img src={circled} alt="">
+                <img src={circled} alt="" height="714" width="899">
                 <span class="material-icons-outlined">
                     casino
                 </span>

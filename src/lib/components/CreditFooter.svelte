@@ -9,14 +9,14 @@
         <span>
             Made by <a href="https://matthiasharzer.de" target="_blank">Matthias Harzer</a> with <a
                 href="https://svelte.dev" target="_blank"><img
-                alt="Svelte" class="svelte" src={svelte_icon}></a>
+                alt="Svelte" class="svelte" src={svelte_icon} height="1443" width="1200"></a>
         </span>
     </div>
     <div class="github">
 
         <a href="https://github.com/MatthiasHarzer/kit-vorlesungs-roulette" target="_blank">
             This project is open source
-            <img alt="Github" src={github_icon}>
+            <img alt="Github" src={github_icon} height="379" width="379">
         </a>
 
     </div>
