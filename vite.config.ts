@@ -15,6 +15,7 @@ export default defineConfig({
                 start_url: "/",
                 display: "standalone",
                 theme_color: "#333333",
+                background_color: "#222222",
                 icons:[
                     {
                         "src": "pwa-icons/manifest-icon-192.png",
