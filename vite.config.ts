@@ -17,13 +17,13 @@ export default defineConfig({
                 theme_color: "#333333",
                 icons:[
                     {
-                        "src": "pwa-icons/manifest-icon-192.maskable.png",
+                        "src": "pwa-icons/manifest-icon-192.png",
                         "sizes": "192x192",
                         "type": "image/png",
                         "purpose": "maskable any"
                     },
                     {
-                        "src": "pwa-icons/manifest-icon-512.maskable.png",
+                        "src": "pwa-icons/manifest-icon-512.png",
                         "sizes": "512x512",
                         "type": "image/png",
                         "purpose": "maskable any"
