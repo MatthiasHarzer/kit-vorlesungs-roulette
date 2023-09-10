@@ -1,7 +1,13 @@
+const KIT_BASE_URL = "https://campus.kit.edu";
+
+export const CORS_PROXY_SERVER = "https://cors.taptwice.dev/";
+export const EXTENDED_SEARCH_BASE_URL = `${KIT_BASE_URL}/sp/campus/all/extendedSearch.asp`;
+export const TERMS_URL = `${KIT_BASE_URL}/sp/server/services/kit/terms.asp`;
+export const ROOMS_QUICK_SEARCH_URL = `${KIT_BASE_URL}/sp/server/services/kit/quicksearch.asp?type=room&find=`
 
 export const KIT_UID_REGEX = /0x[0-9a-fA-F]{32}/;
-export const KIT_CMS_BASE_EVENT_URL = "https://campus.kit.edu/sp/campus/all/event.asp?gguid="
-export const KIT_CMS_BASE_ROOM_URL = "https://campus.kit.edu/sp/campus/all/room.asp?gguid="
+export const KIT_CMS_BASE_EVENT_URL = `${KIT_BASE_URL}/sp/campus/all/event.asp?gguid=`
+export const KIT_CMS_BASE_ROOM_URL = `${KIT_BASE_URL}/sp/campus/all/room.asp?gguid=`
 export const KIT_GGUID_GROUP_REGEX = /gguid=(0x[0-9a-fA-F]{32})/;
 export const KIT_DAY_TIME_REGEX = /(Mo|Di|Mi|Do|Fr|Sa|So)( \((\d{2}.\d{2}.\d{4})\))?, (.*)?, (\d{2}:\d{2} - \d{2}:\d{2}).*/;
 

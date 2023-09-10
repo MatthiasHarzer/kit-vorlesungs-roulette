@@ -8,11 +8,7 @@ import type {
 } from "./types";
 import {END_TIMES, KITRoom} from "./types";
 import {Parser} from "./parser";
-
-const CORS_PROXY_SERVER = "https://cors.taptwice.dev/";
-const BASE_URL = "https://campus.kit.edu/sp/campus/all/extendedSearch.asp";
-const TERMS_URL = "https://campus.kit.edu/sp/server/services/kit/terms.asp";
-const ROOMS_URL = "https://campus.kit.edu/sp/server/services/kit/quicksearch.asp?type=room&find="
+import {EXTENDED_SEARCH_BASE_URL, CORS_PROXY_SERVER, ROOMS_QUICK_SEARCH_URL, TERMS_URL} from "./consts";
 
 const DEFAULT_FORM_DATA: KITExtendedSearchFormData = {
     'search': 'Suchen',
@@ -25,7 +21,6 @@ const DEFAULT_FORM_DATA: KITExtendedSearchFormData = {
 }
 
 let current_room_fetch_id = 0;
-
 
 const i_promise_terms = new Promise<Term[]>((resolve, reject) => {
     make_request(TERMS_URL, {
@@ -108,7 +103,7 @@ export const get_events = async (config: KITTimeEventsConfig): Promise<KITEvent[
     json_form_data.appointmenttimestart = config.time;
     json_form_data.appointmenttimeend = END_TIMES[config.time];
 
-    const response = await make_request(BASE_URL, {
+    const response = await make_request(EXTENDED_SEARCH_BASE_URL, {
         form_data: json_form_data,
         cache: true,
         max_age: 60 * 60 * 24 * 3 // 3 days
@@ -138,7 +133,7 @@ export const get_room_events = async (config: KITRoomEventsConfig): Promise<KITE
 
     json_form_data.room = JSON.stringify(rooms);
 
-    const response = await make_request(BASE_URL, {
+    const response = await make_request(EXTENDED_SEARCH_BASE_URL, {
         form_data: json_form_data,
         cache: true,
         max_age: 60 * 60 * 24 * 3 // 3 days
@@ -155,7 +150,7 @@ export const get_room_events = async (config: KITRoomEventsConfig): Promise<KITE
  */
 export const find_rooms = async (search_term: string): Promise<KITRoom[] | null> => {
     let fetch_id = ++current_room_fetch_id;
-    const query_url = `${ROOMS_URL}${search_term}`;
+    const query_url = `${ROOMS_QUICK_SEARCH_URL}${search_term}`;
     const response = await make_request(query_url, {
         cache: true,
         max_age: 60 * 60 * 24 * 7 * 4 // 4 weeks
