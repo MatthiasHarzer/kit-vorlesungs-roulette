@@ -162,7 +162,7 @@ export class KITEventOccurrence {
         return this.week_day == config_week_day_short &&
             (config.time == null || this.time_span.startsWith(config.time)) &&
             (this.date == null || this.date == config_date_formatted) &&
-            (config.rooms == null || config.rooms.some(room => room.id == this.room.id));
+            (config.rooms == null || config.rooms.some(room => room.id == this.room?.id));
     }
 }
 
