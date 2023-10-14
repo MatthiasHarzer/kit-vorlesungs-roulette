@@ -1,6 +1,7 @@
-import {DATE_FORMAT, KIT_CMS_BASE_EVENT_URL, KIT_CMS_BASE_ROOM_URL, KIT_UID_REGEX} from "./consts";
+import {DATE_FORMAT, KIT_CMS_BASE_EVENT_URL, KIT_CMS_BASE_ROOM_URL, KIT_UID_REGEX, ROOMS_SEARCH_URL} from "./consts";
 import {format_date, time_to_total_seconds} from "./util/util";
 
+// noinspection SpellCheckingInspection
 export interface KITExtendedSearchFormData {
     search: string;
     tguid: string;
@@ -25,6 +26,7 @@ export interface CorsProxyBody {
     max_age?: number;
 }
 
+// noinspection SpellCheckingInspection
 /**
  * The KIT event type.
  */
@@ -47,6 +49,7 @@ export enum KITEventType {
     Sonstiges = "sonst",
 }
 
+// noinspection JSNonASCIINames
 /**
  * The KIT event type map used to convert the event type from the KIT endpoint to the KITEventType enum.
  */
@@ -109,7 +112,7 @@ export class KITRoom {
             search_term = this.name.substring(KITRoom.BUILDING_PREFIX.length);
         }
 
-        return `https://campus.studium.kit.edu/search.php#!campus/all/search.asp?searchterm=${search_term}&searchtype=room`;
+        return `${ROOMS_SEARCH_URL}${search_term}}`;
     }
 
     constructor(id: string, name: string) {
