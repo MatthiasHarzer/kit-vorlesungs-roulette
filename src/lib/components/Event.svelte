@@ -1,9 +1,8 @@
 <script lang="ts">
-
     // import type {KITEvent} from "./api_handler";
 
-    import type {KITEvent, KITOccurrenceEventComparable} from "../types";
-    import {KIT_EVENT_TYPES_LOCALIZATION, KITEventOccurrence} from "../types";
+    import type { KITEvent, KITOccurrenceEventComparable } from "../types";
+    import { KIT_EVENT_TYPES_LOCALIZATION, KITEventOccurrence } from "../types";
 
     export let event: KITEvent;
     export let config: KITOccurrenceEventComparable;
@@ -29,64 +28,79 @@
 
     let target_occurrence: KITEventOccurrence;
 
-    $: matching_occurrences = event.occurrences.filter(occ => occ.matches(config));
-    $: target_occurrence = matching_occurrences.length > 0 ? matching_occurrences[0] : null;
+    $: matching_occurrences = event.occurrences.filter((occ) =>
+        occ.matches(config),
+    );
+    $: target_occurrence =
+        matching_occurrences.length > 0 ? matching_occurrences[0] : null;
     $: loading = target_occurrence == null;
 
     $: if (matching_occurrences.length == 0) {
-        console.log("No matching occurrences found for event (This should not happen!): ", event);
+        console.log(
+            "No matching occurrences found for event (This should not happen!): ",
+            event,
+        );
     }
 
     let element;
 
-    $:{
+    $: {
         if (selected) {
             if (element) {
-                element.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
+                element.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                    inline: "nearest",
+                });
             }
         }
     }
 </script>
 
-
-<div bind:this={element} class="event box-shadow" class:selected style="--color: {color}">
+<div
+    bind:this={element}
+    class="event box-shadow"
+    class:selected
+    style="--color: {color}"
+>
     {#if loading}
         <div class="loading">
-            <span class="material-icons">
-                hourglass_empty
-            </span>
+            <span class="material-icons"> hourglass_empty </span>
         </div>
     {:else}
-        <h4><a href="{event.link}" target="_blank">
-            {event.title}
-            {#if target_occurrence.only_every_second_week}
-                <span class="event-only-every-second-week-note">(14-täglich)</span>
+        <h4>
+            <a href={event.link} target="_blank">
+                {event.title}
+                {#if target_occurrence.only_every_second_week}
+                    <span class="event-only-every-second-week-note"
+                        >(14-täglich)</span
+                    >
                 {/if}
-            <span class="material-icons">
-            open_in_new
-        </span>
-        </a></h4>
-        <hr>
+                <span class="material-icons"> open_in_new </span>
+            </a>
+        </h4>
+        <hr />
         {#if target_occurrence.comment}
             <div class="comment">
-                <span class="material-icons-outlined">
-                    info
-                </span>
+                <span class="material-icons-outlined"> info </span>
                 <span class="comment-text">{target_occurrence.comment}</span>
             </div>
-            {/if}
+        {/if}
         <div class="time-room">
             <span class="time">{target_occurrence.time_span}</span>
             <!--        <span class="label">in Room: </span>-->
             <span class="room">
-            {#if target_occurrence.room?.name}
-                <a href="{target_occurrence.room?.link ?? null}" target="_blank">
-                    {target_occurrence.room?.name}
-                </a>
-            {:else}
-                Unknown
-            {/if}
-        </span>
+                {#if target_occurrence.room?.name}
+                    <a
+                        href={target_occurrence.room?.link ?? null}
+                        target="_blank"
+                    >
+                        {target_occurrence.room?.name}
+                    </a>
+                {:else}
+                    Unknown
+                {/if}
+            </span>
         </div>
         <div class="footer">
             <div class="lecturer">
@@ -100,7 +114,6 @@
 </div>
 
 <style>
-
     .event {
         padding: 10px;
         margin: 5px 10px;
@@ -117,8 +130,6 @@
 
         /*min-width: 40%;*/
         /*max-width: 500px;*/
-
-
     }
 
     .event.selected {
@@ -128,7 +139,6 @@
         box-shadow: 0 0 14px 6px rgba(255, 170, 0, 0.9);
     }
 
-
     h4 {
         margin: 0;
         font-weight: 500;
@@ -136,15 +146,16 @@
         word-wrap: break-word;
     }
 
-    .event-only-every-second-week-note{
+    .event-only-every-second-week-note {
         text-transform: none;
     }
 
-    .comment > *{
+    .comment > * {
         color: #efefef;
     }
 
-    .material-icons, .material-icons-outlined {
+    .material-icons,
+    .material-icons-outlined {
         font-size: 1.2rem;
         vertical-align: middle;
     }
@@ -159,7 +170,8 @@
         border-radius: 5px;
     }
 
-    .time-room .time, .time-room .room {
+    .time-room .time,
+    .time-room .room {
         font-weight: 500;
     }
 
@@ -206,7 +218,6 @@
 
     .footer .lecturer .value {
         font-weight: 500;
-
     }
 
     .footer .type span {
@@ -216,6 +227,4 @@
         display: flex;
         text-align: right;
     }
-
-
 </style>

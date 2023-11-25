@@ -1,8 +1,7 @@
 <script lang="ts">
-    import type {Page} from "./page";
-    import {onMount} from "svelte";
+    import type { Page } from "./page";
+    import { onMount } from "svelte";
     import PageSliderNav from "./PageSliderNav.svelte";
-
 
     export let pages: Page[];
     export let current_page_index: number = 0;
@@ -19,7 +18,6 @@
 
     export let show_navigation: boolean = false;
 
-
     onMount(() => {
         if (current_page_index >= pages.length) {
             current_page_index = pages.length - 1;
@@ -32,7 +30,7 @@
 
         pages_element.onscroll = (_: Event) => {
             offset = pages_element.scrollLeft;
-        }
+        };
     });
 
     let width = 0;
@@ -53,7 +51,6 @@
         previous_page_index = current_page_index;
     }
 
-
     $: if (mounted) {
         total_slide_progress = offset / width;
         last_total_slide_progress = total_slide_progress;
@@ -67,21 +64,33 @@
         }, 100);
     }
 
-    $: relative_slide_progress = ((total_slide_progress + page_index_diff) - current_page_index) / page_index_diff;
+    $: relative_slide_progress =
+        (total_slide_progress + page_index_diff - current_page_index) /
+        page_index_diff;
 </script>
 
 <div class="main">
-    <div bind:clientWidth={width} bind:this={pages_element} class="slides" class:animated={mounted}>
+    <div
+        bind:clientWidth={width}
+        bind:this={pages_element}
+        class="slides"
+        class:animated={mounted}
+    >
         {#each pages as page}
             <div class="page" bind:this={page.element}>
-                <svelte:component this={page.component}/>
+                <svelte:component this={page.component} />
             </div>
         {/each}
     </div>
     {#if show_navigation}
         <div class="nav">
-            <PageSliderNav {pages} bind:total_slide_progress bind:relative_slide_progress bind:current_page_index
-                           bind:page_index_diff/>
+            <PageSliderNav
+                {pages}
+                bind:total_slide_progress
+                bind:relative_slide_progress
+                bind:current_page_index
+                bind:page_index_diff
+            />
         </div>
     {/if}
 </div>
@@ -109,7 +118,6 @@
         width: 100%;
 
         /*flex: auto;*/
-
     }
 
     .slides.animated {
@@ -119,7 +127,6 @@
     .slides::-webkit-scrollbar {
         display: none;
     }
-
 
     .page {
         scroll-snap-align: start;
@@ -140,5 +147,4 @@
         /*height: 3rem;*/
         flex: auto;
     }
-
 </style>

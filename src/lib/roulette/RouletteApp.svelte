@@ -1,21 +1,19 @@
 <script lang="ts">
-    import {fade} from 'svelte/transition';
+    import { fade } from "svelte/transition";
     import LoadingEllipsis from "../components/LoadingEllipsis.svelte";
     import Event from "../components/Event.svelte";
     import ConfigPanel from "./ConfigPanel.svelte";
-    import {format_date} from "../util/util";
-    import {get_events} from "../event_handler";
-    import type {KITEvent, KITTimeEventsConfig} from "../types";
+    import { format_date } from "../util/util";
+    import { get_events } from "../event_handler";
+    import type { KITEvent, KITTimeEventsConfig } from "../types";
 
-    import circled from "../../assets/imgs/circled.png"
-    import arrow from "../../assets/imgs/arrow.png"
+    import circled from "../../assets/imgs/circled.png";
+    import arrow from "../../assets/imgs/arrow.png";
     import * as util from "../util/util";
-    import {KITEventType} from "../types";
+    import { KITEventType } from "../types";
     import CreditFooter from "../components/CreditFooter.svelte";
     import "../app_style.css";
     import RetryButton from "../components/RetryButton.svelte";
-
-
 
     const default_time = util.get_nearest_time_from_now();
     let date = new Date();
@@ -27,34 +25,33 @@
     }
 
     const cached_types_raw = localStorage.getItem("types");
-    const cached_types = cached_types_raw ? JSON.parse(cached_types_raw) : [KITEventType.Vorlesung];
+    const cached_types = cached_types_raw
+        ? JSON.parse(cached_types_raw)
+        : [KITEventType.Vorlesung];
 
     let config: KITTimeEventsConfig = {
         day: date,
         time: default_time,
-        types: cached_types.filter((type)=>type!=null && Object.values(KITEventType).includes(type))
-    }
-    // config = {
-    //     ...config,
-    //     day: new Date("Mon Apr 24 2023 17:41:48 GMT+0200 (Central European Summer Time"),
-    //     time: "08:00"
-    // }
-
+        types: cached_types.filter(
+            (type) =>
+                type != null && Object.values(KITEventType).includes(type),
+        ),
+    };
 
     const resets_indexes = () => {
         available_indexes = available_events.map((_, i) => i);
         remaining_indexes = [...available_indexes];
-    }
+    };
 
-    const fetch_events = () =>{
+    const fetch_events = () => {
         i_promise_events = get_events(config);
-        i_promise_events.then(events => {
+        i_promise_events.then((events) => {
             available_events = events;
             resets_indexes(); // Needs to be a method call to prevent svelte from calling this block every time the array is modified
         });
-    }
+    };
 
-    $:{
+    $: {
         selected_event_index = -1;
         config; // Needed to trigger the watcher
         fetch_events();
@@ -74,82 +71,84 @@
             remaining_indexes = [...available_indexes];
         }
 
-        selected_event_index = remaining_indexes.splice(Math.floor(Math.random() * remaining_indexes.length), 1)[0];
-    }
+        selected_event_index = remaining_indexes.splice(
+            Math.floor(Math.random() * remaining_indexes.length),
+            1,
+        )[0];
+    };
     const clear_random_event = () => {
         selected_event_index = -1;
-    }
+    };
 
     let config_panel_open = false;
     const open_config_panel = () => {
         config_panel_open = true;
-    }
+    };
     const close_config_panel = () => {
         config_panel_open = false;
-    }
+    };
 
     const submit_config = (event) => {
         config = event.detail;
         localStorage.setItem("types", JSON.stringify(config.types));
         close_config_panel();
-    }
+    };
 </script>
 
 <div class="main app-page">
     <div class="app-bar">
         <span class="title">KIT Vorlesungs Roulette</span>
         <div class="randomize">
-            <img src={arrow} alt="->" class="arrow" height="214" width="488"/>
-            <button class="material randomize-btn" on:click={select_random_event}>
-                <img src={circled} alt="" height="714" width="899">
-                <span class="material-icons-outlined">
-                    casino
-                </span>
+            <img src={arrow} alt="->" class="arrow" height="214" width="488" />
+            <button
+                class="material randomize-btn"
+                on:click={select_random_event}
+            >
+                <img src={circled} alt="" height="714" width="899" />
+                <span class="material-icons-outlined"> casino </span>
             </button>
         </div>
     </div>
     <div class="content">
         <div class="config" on:click={open_config_panel}>
-
             <div class="day text">
-                <span class="key">
-                    Tag:
-                </span>
+                <span class="key"> Tag: </span>
                 <span class="value">
                     {format_date(config.day, "#DDD#, #D#. #M#. #YYYY#")}
                 </span>
             </div>
             <div class="right">
                 <div class="time text">
-                    <span class="key">
-                        Zeit:
-                    </span>
+                    <span class="key"> Zeit: </span>
                     <span class="value">
                         {config.time} Uhr
                     </span>
-
                 </div>
-                <button class="material" on:click|stopPropagation={open_config_panel}>
-                    <span class="material-icons">
-                        edit
-                    </span>
+                <button
+                    class="material"
+                    on:click|stopPropagation={open_config_panel}
+                >
+                    <span class="material-icons"> edit </span>
                 </button>
             </div>
         </div>
-        <hr/>
+        <hr />
         {#await i_promise_events}
             <div class="loading flex-center">
                 <h3>Loading</h3>
-                <LoadingEllipsis/>
+                <LoadingEllipsis />
             </div>
         {:then events}
             {#if events.length > 0}
                 <div class="events">
                     {#each events as event}
-
-                        <Event event={event} config={config} index={events.indexOf(event)}
-                               selected={selected_event_index===events.indexOf(event)}/>
-
+                        <Event
+                            {event}
+                            {config}
+                            index={events.indexOf(event)}
+                            selected={selected_event_index ===
+                                events.indexOf(event)}
+                        />
                     {/each}
                 </div>
             {:else}
@@ -163,20 +162,26 @@
                 <RetryButton on:click={fetch_events} />
             </div>
         {/await}
-        <CreditFooter />
 
+        <CreditFooter />
     </div>
 
     {#if config_panel_open}
-        <ConfigPanel on:close={close_config_panel} on:submit={submit_config} config={{...config}}/>
+        <ConfigPanel
+            on:close={close_config_panel}
+            on:submit={submit_config}
+            config={{ ...config }}
+        />
     {/if}
 
     {#if selected_event_index >= 0}
-        <div transition:fade="{{duration: 200}}" class="dark-background" on:click|stopPropagation={clear_random_event}></div>
+        <div
+            transition:fade={{ duration: 200 }}
+            class="dark-background"
+            on:click|stopPropagation={clear_random_event}
+        ></div>
     {/if}
-
 </div>
-
 
 <style>
     .config .text {
@@ -237,7 +242,6 @@
 
     .randomize-btn {
         position: relative;
-
     }
 
     .randomize-btn img {

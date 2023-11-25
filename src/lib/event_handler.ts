@@ -1,33 +1,42 @@
-import {format_date} from "./util/util";
+import { format_date } from "./util/util";
 import type {
     CorsProxyBody,
     KITEvent,
     KITExtendedSearchFormData,
     KITRoomEventsConfig,
-    KITTimeEventsConfig, RawRoom, RawTerm, RequestParams, Term
+    KITTimeEventsConfig,
+    RawRoom,
+    RawTerm,
+    RequestParams,
+    Term,
 } from "./types";
-import {END_TIMES, KITRoom} from "./types";
-import {Parser} from "./parser";
-import {EXTENDED_SEARCH_BASE_URL, CORS_PROXY_SERVER, ROOMS_QUICK_SEARCH_URL, TERMS_URL} from "./consts";
+import { END_TIMES, KITRoom } from "./types";
+import { Parser } from "./parser";
+import {
+    EXTENDED_SEARCH_BASE_URL,
+    CORS_PROXY_SERVER,
+    ROOMS_QUICK_SEARCH_URL,
+    TERMS_URL,
+} from "./consts";
 
 const DEFAULT_FORM_DATA: KITExtendedSearchFormData = {
-    'search': 'Suchen',
-    'tguid': '', // This gets replaced by the correct term id
-    'appointmentdate': '',
-    'appointmenttimestart': '',
-    'appointmenttimeend': '',
-    'pagesize': 500,
-    'room': "{}"
-}
+    search: "Suchen",
+    tguid: "", // This gets replaced by the correct term id
+    appointmentdate: "",
+    appointmenttimestart: "",
+    appointmenttimeend: "",
+    pagesize: 500,
+    room: "{}",
+};
 
 let current_room_fetch_id = 0;
 
 const i_promise_terms = new Promise<Term[]>((resolve, reject) => {
     make_request(TERMS_URL, {
         cache: true,
-        max_age: 60 * 60 * 24 // 1 day
+        max_age: 60 * 60 * 24, // 1 day
     })
-        .then(response => response.json())
+        .then((response) => response.json())
         .then((json: { [id: string]: RawTerm }) => {
             const terms = [];
             for (const id in json) {
@@ -35,13 +44,12 @@ const i_promise_terms = new Promise<Term[]>((resolve, reject) => {
                 terms.push({
                     start: new Date(term.tstart),
                     end: new Date(term.tend),
-                    id: id
+                    id: id,
                 });
             }
             resolve(terms);
         })
-        .catch(error => reject(error));
-
+        .catch((error) => reject(error));
 });
 
 const get_term_id = async (date: Date): Promise<string> => {
@@ -52,18 +60,20 @@ const get_term_id = async (date: Date): Promise<string> => {
         }
     }
     throw new Error("No term found for the given date.");
-}
+};
 
 /**
  * Creates a template for the form data and determines the term id.
  * @param date The date to get the term id for.
  */
-const get_form_data_template = async (date: Date): Promise<KITExtendedSearchFormData> => {
-    const json_form_data = {...DEFAULT_FORM_DATA};
+const get_form_data_template = async (
+    date: Date,
+): Promise<KITExtendedSearchFormData> => {
+    const json_form_data = { ...DEFAULT_FORM_DATA };
     json_form_data.tguid = await get_term_id(date);
     json_form_data.appointmentdate = format_date(date, "#DD#.#MM#.#YYYY#");
     return json_form_data;
-}
+};
 
 /**
  * Makes a request to the cors proxy to avoid CORS issues with the KIT endpoint.
@@ -73,8 +83,11 @@ const get_form_data_template = async (date: Date): Promise<KITExtendedSearchForm
  *
  * @see https://github.com/MatthiasHarzer/minimal-cors-server
  */
-function make_request(url: string, params: RequestParams = {}): Promise<Response> {
-    const {form_data, headers, cache, max_age} = params;
+function make_request(
+    url: string,
+    params: RequestParams = {},
+): Promise<Response> {
+    const { form_data, headers, cache, max_age } = params;
     const body: CorsProxyBody = {
         method: "POST",
         url: url,
@@ -82,15 +95,15 @@ function make_request(url: string, params: RequestParams = {}): Promise<Response
         headers: headers,
         cache: cache ?? true,
         max_age: max_age ?? 0,
-    }
+    };
 
     return fetch(CORS_PROXY_SERVER, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         },
-        body: JSON.stringify(body)
-    })
+        body: JSON.stringify(body),
+    });
 }
 
 /**
@@ -98,7 +111,9 @@ function make_request(url: string, params: RequestParams = {}): Promise<Response
  * @param config The config.
  * @returns The events.
  */
-export const get_events = async (config: KITTimeEventsConfig): Promise<KITEvent[]> => {
+export const get_events = async (
+    config: KITTimeEventsConfig,
+): Promise<KITEvent[]> => {
     const json_form_data = await get_form_data_template(config.day);
     json_form_data.appointmenttimestart = config.time;
     json_form_data.appointmenttimeend = END_TIMES[config.time];
@@ -106,24 +121,25 @@ export const get_events = async (config: KITTimeEventsConfig): Promise<KITEvent[
     const response = await make_request(EXTENDED_SEARCH_BASE_URL, {
         form_data: json_form_data,
         cache: true,
-        max_age: 60 * 60 * 24 * 3 // 3 days
+        max_age: 60 * 60 * 24 * 3, // 3 days
     });
     const text = await response.text();
 
     const parser = new Parser(text);
-    const events = parser.get_all_events()
-        .filter((event) => {
-            return event.occurrences.some(occ => occ.matches(config));
-        });
+    const events = parser.get_all_events().filter((event) => {
+        return event.occurrences.some((occ) => occ.matches(config));
+    });
     if (config.types.length === 0) return events;
     return events.filter((event) => config.types.includes(event.type));
-}
+};
 
 /**
  * Returns all events matching the kit room events config.
  * @param config The config.
  */
-export const get_room_events = async (config: KITRoomEventsConfig): Promise<KITEvent[]> => {
+export const get_room_events = async (
+    config: KITRoomEventsConfig,
+): Promise<KITEvent[]> => {
     const json_form_data = await get_form_data_template(config.day);
 
     const rooms = {};
@@ -136,24 +152,30 @@ export const get_room_events = async (config: KITRoomEventsConfig): Promise<KITE
     const response = await make_request(EXTENDED_SEARCH_BASE_URL, {
         form_data: json_form_data,
         cache: true,
-        max_age: 60 * 60 * 24 * 3 // 3 days
+        max_age: 60 * 60 * 24 * 3, // 3 days
     });
     const text = await response.text();
 
     const parser = new Parser(text);
-    return parser.get_all_events().filter((event) => event.occurrences.some(occ => occ.matches(config)));
-}
+    return parser
+        .get_all_events()
+        .filter((event) =>
+            event.occurrences.some((occ) => occ.matches(config)),
+        );
+};
 
 /**
  * Finds rooms matching the search term.
  * @param search_term The search term.
  */
-export const find_rooms = async (search_term: string): Promise<KITRoom[] | null> => {
+export const find_rooms = async (
+    search_term: string,
+): Promise<KITRoom[] | null> => {
     let fetch_id = ++current_room_fetch_id;
     const query_url = `${ROOMS_QUICK_SEARCH_URL}${search_term}`;
     const response = await make_request(query_url, {
         cache: true,
-        max_age: 60 * 60 * 24 * 7 * 4 // 4 weeks
+        max_age: 60 * 60 * 24 * 7 * 4, // 4 weeks
     });
 
     if (fetch_id !== current_room_fetch_id) {
@@ -163,6 +185,4 @@ export const find_rooms = async (search_term: string): Promise<KITRoom[] | null>
     const json: { count: number; result: RawRoom[] } = await response.json();
 
     return json.result.map((room) => new KITRoom(room.id, room.name));
-}
-
-
+};

@@ -2,9 +2,9 @@
     import "../app_style.css";
     import LoadingEllipsis from "../components/LoadingEllipsis.svelte";
     import CreditFooter from "../components/CreditFooter.svelte";
-    import type {KITRoomEventsConfig} from "../types";
-    import {KITEvent, KITRoom} from "../types";
-    import {find_rooms, get_room_events} from "../event_handler";
+    import type { KITRoomEventsConfig } from "../types";
+    import { KITEvent, KITRoom } from "../types";
+    import { find_rooms, get_room_events } from "../event_handler";
     import Event from "../components/Event.svelte";
     import DaySelect from "../components/DaySelect.svelte";
     import RetryButton from "../components/RetryButton.svelte";
@@ -18,21 +18,22 @@
     const try_get_cached_rooms = () => {
         const cached_rooms_raw = localStorage.getItem("cached_rooms");
         try {
-            return cached_rooms_raw ? JSON.parse(cached_rooms_raw).map((r) => new KITRoom(r.id, r.name)) : null;
+            return cached_rooms_raw
+                ? JSON.parse(cached_rooms_raw).map(
+                      (r) => new KITRoom(r.id, r.name),
+                  )
+                : null;
         } catch (e) {
             return null;
         }
-    }
-
+    };
 
     const config: KITRoomEventsConfig = {
         day: new Date(),
         rooms: try_get_cached_rooms() || [],
-    }
-
+    };
 
     $: if (room_search_term.length > 0) {
-
         const make_search = (term: string) => {
             find_rooms(term).then((rooms) => {
                 if (rooms == null) return;
@@ -40,7 +41,7 @@
                     return !config.rooms.some((r) => r.id === room.id);
                 });
             });
-        }
+        };
 
         if (typing_timeout != null) {
             clearTimeout(typing_timeout);
@@ -58,11 +59,11 @@
     const on_room_click = (room: KITRoom) => {
         config.rooms = [...config.rooms, room];
         room_search_term = "";
-    }
+    };
 
     const on_remove_room_click = (room: KITRoom) => {
         config.rooms = config.rooms.filter((r) => r.id !== room.id);
-    }
+    };
 
     let i_promise_events: Promise<KITEvent[]>;
 
@@ -76,21 +77,24 @@
             try {
                 const events = await get_room_events(config);
                 events.sort((a, b) => {
-                    return a.occurrences.find(occ => occ.matches(config))?.time_start_as_total_seconds -
-                        b.occurrences.find(occ => occ.matches(config))?.time_start_as_total_seconds;
+                    return (
+                        a.occurrences.find((occ) => occ.matches(config))
+                            ?.time_start_as_total_seconds -
+                        b.occurrences.find((occ) => occ.matches(config))
+                            ?.time_start_as_total_seconds
+                    );
                 });
                 res(events);
             } catch (e) {
                 rej(e);
             }
         });
-    }
+    };
 
     $: {
         config;
         fetch_events();
     }
-
 </script>
 
 <div class="main app-page">
@@ -100,7 +104,7 @@
     <div class="content">
         <div class="config">
             <div class="day-select">
-                <DaySelect bind:date={config.day}/>
+                <DaySelect bind:date={config.day} />
             </div>
             {#if config.rooms.length > 0}
                 <div class="selected-rooms-header">
@@ -110,21 +114,29 @@
                     {#each config.rooms as room}
                         <div class="selected-room">
                             <span>{room.name}</span>
-                            <button class="material" on:click={()=>on_remove_room_click(room)}>
-                                <span class="material-icons">
-                                    close
-                                </span>
+                            <button
+                                class="material"
+                                on:click={() => on_remove_room_click(room)}
+                            >
+                                <span class="material-icons"> close </span>
                             </button>
                         </div>
                     {/each}
                 </div>
             {/if}
             <div class="room-search">
-                <input bind:value={room_search_term} placeholder="Raum suchen..." type="text"/>
+                <input
+                    bind:value={room_search_term}
+                    placeholder="Raum suchen..."
+                    type="text"
+                />
                 {#if auto_complete_items.length > 0}
                     <div class="auto-complete box-shadow">
                         {#each auto_complete_items as item}
-                            <div class="auto-complete-item" on:click={()=>on_room_click(item)}>
+                            <div
+                                class="auto-complete-item"
+                                on:click={() => on_room_click(item)}
+                            >
                                 <span>{item.name}</span>
                             </div>
                         {/each}
@@ -136,16 +148,13 @@
         {#await i_promise_events}
             <div class="loading flex-center">
                 <h3>Loading</h3>
-                <LoadingEllipsis/>
+                <LoadingEllipsis />
             </div>
         {:then events}
             {#if events.length > 0}
                 <div class="events">
                     {#each events as event}
-
-                        <Event event={event} config={config} index={events.indexOf(event)}
-                        />
-
+                        <Event {event} {config} index={events.indexOf(event)} />
                     {/each}
                 </div>
             {:else}
@@ -156,14 +165,12 @@
         {:catch error}
             <div class="error-snippet">
                 <p>{error}</p>
-                <RetryButton on:click={fetch_events}/>
+                <RetryButton on:click={fetch_events} />
             </div>
         {/await}
-        <CreditFooter/>
-
+        <CreditFooter />
     </div>
 </div>
-
 
 <style>
     .config {
@@ -242,7 +249,6 @@
         flex: 1 0 auto;
         max-width: 100%;
         color: #d0d0d0;
-
     }
 
     .events {

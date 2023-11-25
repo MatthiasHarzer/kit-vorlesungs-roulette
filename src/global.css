@@ -6,29 +6,33 @@
 }
 
 @font-face {
-    font-family: 'Material Icons';
+    font-family: "Material Icons";
     font-style: normal;
     font-weight: 400;
-    src: local('Material Icons'),
-    local('MaterialIcons-Regular'),
-    url(assets/icon_font/MaterialIcons-Regular.ttf) format('truetype');
+    src:
+        local("Material Icons"),
+        local("MaterialIcons-Regular"),
+        url(assets/icon_font/MaterialIcons-Regular.ttf) format("truetype");
 
     font-display: swap;
 }
 @font-face {
-    font-family: 'Material Icons Outlined';
+    font-family: "Material Icons Outlined";
     font-style: normal;
     font-weight: 400;
-    src: local('Material Icons'),
-    local('MaterialIcons-Regular'),
-    url(assets/icon_font/MaterialIconsOutlined-Regular.otf) format('truetype');
+    src:
+        local("Material Icons"),
+        local("MaterialIcons-Regular"),
+        url(assets/icon_font/MaterialIconsOutlined-Regular.otf)
+            format("truetype");
 
     font-display: swap;
 }
 
-.material-icons, .material-icons-outlined {
+.material-icons,
+.material-icons-outlined {
     /*noinspection CssNoGenericFontName*/
-    font-family: 'Material Icons';
+    font-family: "Material Icons";
     font-weight: normal;
     font-style: normal;
     font-size: 24px; /* Preferred icon size */
@@ -49,18 +53,19 @@
     -moz-osx-font-smoothing: grayscale;
 
     /* Support for IE. */
-    font-feature-settings: 'liga';
+    font-feature-settings: "liga";
     color: white;
 }
 
 .material-icons-outlined {
     /*noinspection CssNoGenericFontName*/
-    font-family: 'Material Icons Outlined' !important;
+    font-family: "Material Icons Outlined" !important;
 
-    font-variation-settings: 'FILL' 0,
-    'wght' 400,
-    'GRAD' 0,
-    'opsz' 48 !important;
+    font-variation-settings:
+        "FILL" 0,
+        "wght" 400,
+        "GRAD" 0,
+        "opsz" 48 !important;
 }
 
 :root {
@@ -83,7 +88,6 @@
     --light-bg-color: rgb(223, 223, 223);
     --light-list-accent-color: rgb(214, 214, 214);
     --light-blur-color: rgba(104, 104, 104, 0.582);
-
 
     --priority-high-color: #0928c9;
     /*--priority-mid-color: #063d3d;*/
@@ -114,13 +118,13 @@
     transition: color 0.3s ease-in-out;
 }
 
-
-html, body {
+html,
+body {
     position: relative;
     width: 100%;
     height: 100%;
 }
-hr{
+hr {
     border-radius: 100%;
     margin: 0;
     color: darkgray;
@@ -131,8 +135,17 @@ body {
     margin: 0;
     background-color: var(--dark-background);
     box-sizing: border-box;
-    font-family: Bahnschrift, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-
+    font-family:
+        Bahnschrift,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Oxygen-Sans,
+        Ubuntu,
+        Cantarell,
+        "Helvetica Neue",
+        sans-serif;
 }
 
 /*For disabling scroll-to-refresh on mobile*/
@@ -181,7 +194,10 @@ label {
     display: block;
 }
 
-input, button, select, textarea {
+input,
+button,
+select,
+textarea {
     font-family: inherit;
     font-size: inherit;
     -webkit-padding: 0.4em 0;
@@ -202,16 +218,14 @@ input::-webkit-inner-spin-button {
     margin: 0;
 }
 
-input[type=number] {
+input[type="number"] {
     -moz-appearance: textfield;
 }
 
 select.clean {
-
     -moz-appearance: none; /* Firefox */
     -webkit-appearance: none; /* Safari and Chrome */
     appearance: none;
-
 }
 
 button {
@@ -221,7 +235,10 @@ button {
     cursor: pointer;
 }
 
-button, button:focus, button:active, button:target {
+button,
+button:focus,
+button:active,
+button:target {
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -232,7 +249,6 @@ button span {
 button:disabled {
     color: #999;
 }
-
 
 button:focus {
     border-color: #666;
@@ -272,8 +288,9 @@ button:focus {
 }
 
 .box-shadow {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
-    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    box-shadow:
+        0 4px 8px 0 rgba(0, 0, 0, 0.2),
+        0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .noscroll {
@@ -310,7 +327,6 @@ button:focus {
     position: relative;
 }
 
-
 main.light .blur-background {
     background-color: var(--light-blur-color);
 }
@@ -337,13 +353,12 @@ main.light .blur-background {
     height: auto;
 }
 
-.content h3, .dialog h3 {
-
+.content h3,
+.dialog h3 {
     font-size: 22px;
     font-weight: 400;
     text-align: center;
     margin-bottom: 0;
-
 }
 
 main.light .dialog-wrapper {
@@ -406,8 +421,6 @@ button.clear-btn {
     margin: 0;
     background-color: transparent;
     border: none;
-
-
 }
 
 button.clear-btn:active {
@@ -416,7 +429,6 @@ button.clear-btn:active {
 
 /* Unified date input */
 input[type="date"]::-webkit-calendar-picker-indicator {
-
     color: transparent;
     background: none;
     z-index: 1;
@@ -426,12 +438,10 @@ input[type="date"] {
     position: relative;
 }
 
-
-input[type=date]::-webkit-inner-spin-button,
-input[type=date]::-webkit-outer-spin-button {
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
 }
-
 
 .flex-center {
     display: flex;
@@ -457,7 +467,8 @@ button.material.text-button {
     color: white;
 }
 
-button.material:before, button.material:after {
+button.material:before,
+button.material:after {
     content: "";
     display: block;
     width: 0;
@@ -480,7 +491,8 @@ button.material:after {
     height: 100%;
 }
 
-button.material.text-button:before, button.material.text-button:after {
+button.material.text-button:before,
+button.material.text-button:after {
     height: 100%;
     width: 100%;
     opacity: 0;
@@ -511,7 +523,6 @@ button.material > * {
     position: relative;
 }
 
-
 /*Material icons*/
 /*.material-icons, .material-icons-outlined {*/
 /*    color: rgb(211, 211, 211);*/
@@ -519,7 +530,6 @@ button.material > * {
 /*    padding: 2px;*/
 /*    border-radius: 50%;*/
 /*}*/
-
 
 /*.material-icons.md-inactive { color: rgba(141, 141, 141, 0.26); }*/
 
@@ -547,8 +557,8 @@ button.material > * {
     font-size: 56px;
 }
 
-span.material-icons:active, span.material-icons-outlined:active {
-
+span.material-icons:active,
+span.material-icons-outlined:active {
 }
 
 img {
@@ -559,7 +569,6 @@ img {
 .no-transition * {
     transition: none !important;
 }
-
 
 .fancy-input {
     position: relative;
@@ -574,7 +583,6 @@ img {
     border-radius: 0;
     padding-bottom: 1px;
     margin-bottom: 0;
-
 }
 
 /* .input label {
@@ -630,7 +638,6 @@ img {
     border: none;
     height: 100%;
 }
-
 
 .header button.close-btn {
     position: absolute;

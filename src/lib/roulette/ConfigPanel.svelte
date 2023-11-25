@@ -1,8 +1,12 @@
 <script lang="ts">
-    import {createEventDispatcher} from "svelte";
-    import {isBackgroundClick} from "../util/util";
-    import type {KITTimeEventsConfig} from "../types";
-    import {KIT_EVENT_TYPES_LOCALIZATION, KITEventType, VALID_TIMES} from "../types";
+    import { createEventDispatcher } from "svelte";
+    import { isBackgroundClick } from "../util/util";
+    import type { KITTimeEventsConfig } from "../types";
+    import {
+        KIT_EVENT_TYPES_LOCALIZATION,
+        KITEventType,
+        VALID_TIMES,
+    } from "../types";
     import DaySelect from "../components/DaySelect.svelte";
 
     export let config: KITTimeEventsConfig;
@@ -13,27 +17,25 @@
 
     const close = () => {
         dispatch("close");
-    }
+    };
     const bg_click = (e) => {
         if (isBackgroundClick(e)) {
             close();
         }
-    }
+    };
 
     const submit = () => {
         dispatch("submit", config);
-    }
+    };
 
     const toggle_type = (type: KITEventType) => {
         if (config.types.includes(type)) {
-            config.types = config.types.filter(t => t !== type);
+            config.types = config.types.filter((t) => t !== type);
         } else {
             config.types.push(type);
-
         }
         config.types = config.types;
-    }
-
+    };
 </script>
 
 <div class="blur-background bg" on:click={bg_click}>
@@ -48,30 +50,47 @@
             <div class="day item">
                 <span class="key">Tag</span>
                 <span class="value">
-                    <DaySelect bind:date={config.day}/>
+                    <DaySelect bind:date={config.day} />
                     <!--                    <DateInput bind:value={config.day} format="yyyy-MM-dd" closeOnSelection={true}/>-->
                 </span>
             </div>
             <div class="day item">
                 <span class="key">Zeit</span>
                 <span class="value">
-                        <select bind:value={config.time} class="dark-select" id="time" name="time">
-                            {#each VALID_TIMES as time}
-                                <option value={time}>{time} Uhr</option>
-                            {/each}
-                        </select>
+                    <select
+                        bind:value={config.time}
+                        class="dark-select"
+                        id="time"
+                        name="time"
+                    >
+                        {#each VALID_TIMES as time}
+                            <option value={time}>{time} Uhr</option>
+                        {/each}
+                    </select>
                 </span>
             </div>
             <div class="type item">
                 <span class="key">Typ</span>
                 <span class="value">
                     {#each Object.keys(KIT_EVENT_TYPES_LOCALIZATION) as key}
-                        <label class="box-shadow" for={key} class:active={config.types.includes(key)}>
+                        <label
+                            class="box-shadow"
+                            for={key}
+                            class:active={config.types.includes(key)}
+                        >
                             {KIT_EVENT_TYPES_LOCALIZATION[key]}
                         </label>
-                        <input hidden type="checkbox" name="type" id={key} value={key} on:change={()=>{
-                            toggle_type(key);
-                        }} checked={config.types.includes(key)}/>
+                        <input
+                            hidden
+                            type="checkbox"
+                            name="type"
+                            id={key}
+                            value={key}
+                            on:change={() => {
+                                toggle_type(key);
+                            }}
+                            checked={config.types.includes(key)}
+                        />
                     {/each}
                 </span>
             </div>
@@ -82,7 +101,6 @@
             </button>
         </div>
     </div>
-
 </div>
 
 <style>
@@ -128,7 +146,6 @@
         flex-wrap: wrap;
         justify-content: space-between;
         margin-bottom: 1rem;
-
     }
 
     .item.type .value label {
@@ -146,7 +163,6 @@
 
         -webkit-touch-callout: none; /* iOS Safari */
         -webkit-user-select: none; /* Safari */
-        -khtml-user-select: none; /* Konqueror HTML */
         -moz-user-select: none; /* Old versions of Firefox */
         -ms-user-select: none; /* Internet Explorer/Edge */
         user-select: none; /* Non-prefixed version, currently */
@@ -172,5 +188,4 @@
         border: none;
         cursor: pointer;
     }
-
 </style>

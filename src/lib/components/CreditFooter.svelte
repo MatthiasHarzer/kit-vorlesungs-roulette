@@ -3,22 +3,32 @@
     import github_icon from "../../assets/imgs/github.png";
 </script>
 
-
 <div class="footer">
     <div class="made-by">
         <span>
-            Made by <a href="https://matthiasharzer.de" target="_blank">Matthias Harzer</a> with <a
-                href="https://svelte.dev" target="_blank"><img
-                alt="Svelte" class="svelte" src={svelte_icon} height="1443" width="1200"></a>
+            Made by <a href="https://matthiasharzer.de" target="_blank"
+                >Matthias Harzer</a
+            >
+            with
+            <a href="https://svelte.dev" target="_blank"
+                ><img
+                    alt="Svelte"
+                    class="svelte"
+                    src={svelte_icon}
+                    height="1443"
+                    width="1200"
+                /></a
+            >
         </span>
     </div>
     <div class="github">
-
-        <a href="https://github.com/MatthiasHarzer/kit-vorlesungs-roulette" target="_blank">
+        <a
+            href="https://github.com/MatthiasHarzer/kit-vorlesungs-roulette"
+            target="_blank"
+        >
             This project is open source
-            <img alt="Github" src={github_icon} height="379" width="379">
+            <img alt="Github" src={github_icon} height="379" width="379" />
         </a>
-
     </div>
 </div>
 
@@ -34,7 +44,6 @@
         /*flex-direction: column;*/
         font-size: 0.9rem;
         justify-content: space-between;
-
     }
 
     .footer > * {
@@ -48,7 +57,6 @@
     .footer div > * {
         display: flex;
         align-items: center;
-
     }
 
     .footer img {

@@ -1,12 +1,11 @@
 <script lang="ts">
-    import {createEventDispatcher} from "svelte";
+    import { createEventDispatcher } from "svelte";
 
     const dispatcher = createEventDispatcher();
 
     const click = () => {
         dispatcher("click");
-    }
-
+    };
 </script>
 
 <button class="material text-button" on:click>
@@ -15,7 +14,8 @@
 </button>
 
 <style>
-    button, .material-icons {
+    button,
+    .material-icons {
         color: #ccc !important;
     }
 
@@ -30,5 +30,4 @@
         margin-right: 5px;
         font-size: 1.3rem;
     }
-
 </style>

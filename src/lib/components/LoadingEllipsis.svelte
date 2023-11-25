@@ -1,6 +1,9 @@
-
-<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-
+<div class="lds-ellipsis">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+</div>
 
 <style>
     .lds-ellipsis,

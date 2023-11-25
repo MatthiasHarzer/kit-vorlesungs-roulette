@@ -1,6 +1,5 @@
 <script lang="ts">
-    import type {Page} from "./page";
-
+    import type { Page } from "./page";
 
     export let pages: Page[];
     export let current_page_index = 0;
@@ -12,28 +11,30 @@
 
     const set_app_index = (index: number) => {
         current_page_index = index;
-    }
+    };
 
     $: active_indicator_style =
         `--width: ${nav_element_width}px;` +
         `--page-index-difference: ${Math.abs(page_index_diff)};` +
         `--blob-left: ${nav_element_width * total_slide_progress}px;` +
-        `--blob-sined-progress: ${Math.abs(Math.sin(relative_slide_progress * Math.PI))};`;
+        `--blob-sined-progress: ${Math.abs(
+            Math.sin(relative_slide_progress * Math.PI),
+        )};`;
 </script>
 
 <div class="main">
     {#each pages as page, index}
-        <button class="nav-item-btn clear" class:active={current_page_index === index}
-                on:click={() => set_app_index(index)}
-                bind:clientWidth={nav_element_width}
+        <button
+            class="nav-item-btn clear"
+            class:active={current_page_index === index}
+            on:click={() => set_app_index(index)}
+            bind:clientWidth={nav_element_width}
         >
             <span class="material-icons">{page.icon}</span>
             <span>{page.title}</span>
         </button>
-
     {/each}
-    <div class="active-indicator"
-         style={active_indicator_style}>
+    <div class="active-indicator" style={active_indicator_style}>
         <div class="blob"></div>
     </div>
 </div>
@@ -66,7 +67,6 @@
     }
 
     .nav-item-btn {
-
         display: flex;
         flex: 1 0;
         flex-direction: row;
@@ -77,7 +77,6 @@
         transition: background-color 0.2s ease-in-out;
         position: relative;
         height: 100%;
-
     }
 
     .nav-item-btn:hover {
@@ -116,7 +115,13 @@
         bottom: 0;
         left: 0;
         height: 0.3rem;
-        width: calc(var(--blob-sined-progress) * (var(--max-width) * var(--page-index-difference) - var(--min-width)) + var(--min-width));
+        width: calc(
+            var(--blob-sined-progress) *
+                (
+                    var(--max-width) * var(--page-index-difference) -
+                        var(--min-width)
+                ) + var(--min-width)
+        );
         background-color: #eaeaea;
         border-radius: 1rem 1rem 0 0;
     }
