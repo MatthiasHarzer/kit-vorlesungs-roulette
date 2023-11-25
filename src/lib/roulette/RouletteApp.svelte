@@ -7,13 +7,12 @@
     import { get_events } from "../event_handler";
     import type { KITEvent, KITTimeEventsConfig } from "../types";
 
-    import circled from "../../assets/imgs/circled.png";
-    import arrow from "../../assets/imgs/arrow.png";
     import * as util from "../util/util";
     import { KITEventType } from "../types";
     import CreditFooter from "../components/CreditFooter.svelte";
     import "../app_style.css";
     import RetryButton from "../components/RetryButton.svelte";
+    import RouletteFab from "./RandomizeFab.svelte";
 
     const default_time = util.get_nearest_time_from_now();
     let date = new Date();
@@ -98,16 +97,6 @@
 <div class="main app-page">
     <div class="app-bar">
         <span class="title">KIT Vorlesungs Roulette</span>
-        <div class="randomize">
-            <img src={arrow} alt="->" class="arrow" height="214" width="488" />
-            <button
-                class="material randomize-btn"
-                on:click={select_random_event}
-            >
-                <img src={circled} alt="" height="714" width="899" />
-                <span class="material-icons-outlined"> casino </span>
-            </button>
-        </div>
     </div>
     <div class="content">
         <div class="config" on:click={open_config_panel}>
@@ -163,8 +152,15 @@
             </div>
         {/await}
 
+        <div class="fab-margin"></div>
+
         <CreditFooter />
     </div>
+
+    <RouletteFab
+        events_promise={i_promise_events}
+        on:click={select_random_event}
+    />
 
     {#if config_panel_open}
         <ConfigPanel
@@ -226,35 +222,6 @@
         margin: 0 auto;
     }
 
-    .randomize {
-        display: flex;
-        align-items: center;
-    }
-
-    .randomize img.arrow {
-        /*width: 1.5rem;*/
-        position: relative;
-        top: 0.4rem;
-        width: auto;
-        height: 1.9rem;
-        margin-right: 0.5rem;
-    }
-
-    .randomize-btn {
-        position: relative;
-    }
-
-    .randomize-btn img {
-        position: absolute;
-        /*top: -0.5rem;*/
-        /*left: -0.5rem;*/
-        width: auto;
-        height: 120%;
-        transform: rotate(-45deg);
-        object-fit: cover;
-        z-index: 1;
-    }
-
     .events {
         /*height: 100%;*/
         width: 100%;
@@ -278,5 +245,12 @@
         height: 100%;
         background-color: rgba(0, 0, 0, 0.5);
         z-index: 1;
+    }
+
+    .fab-margin {
+        height: 80px;
+        width: 100%;
+        position: relative;
+        flex: 0 0 auto;
     }
 </style>

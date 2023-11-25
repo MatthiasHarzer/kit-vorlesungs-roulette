@@ -14,6 +14,16 @@
     flex-direction: column;
     overflow-y: auto;
 }
+.main.app-page .content::-webkit-scrollbar {
+    width: 0.5rem;
+}
+.main.app-page .content::-webkit-scrollbar-track {
+    background: #1e1e1e44;
+}
+.main.app-page .content::-webkit-scrollbar-thumb {
+    background: #5c5c5c;
+    border-radius: 10px;
+}
 
 .main.app-page .app-bar {
     flex: 0 0 auto;
