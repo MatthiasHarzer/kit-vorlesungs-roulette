@@ -176,7 +176,7 @@
 
 <style>
     .config {
-        /*padding: 0.5rem;*/
+        padding: 0.5rem;
         background-color: #1e1e1e;
         border-radius: 0.5rem;
         margin: 0.5rem;

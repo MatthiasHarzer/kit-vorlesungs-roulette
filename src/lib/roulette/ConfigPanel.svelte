@@ -38,7 +38,11 @@
     };
 </script>
 
-<div class="blur-background bg" on:click={bg_click}>
+<div class="blur-background bg"
+     on:click={bg_click}
+     on:keydown={bg_click}
+     tabindex="-1"
+>
     <div class="dialog bo">
         <div class="header">
             <h3>Einstellungen</h3>
@@ -51,7 +55,6 @@
                 <span class="key">Tag</span>
                 <span class="value">
                     <DaySelect bind:date={config.day} />
-                    <!--                    <DateInput bind:value={config.day} format="yyyy-MM-dd" closeOnSelection={true}/>-->
                 </span>
             </div>
             <div class="day item">
@@ -104,11 +107,15 @@
 </div>
 
 <style>
+    .bg{
+        z-index: 99999;
+    }
+
     .dialog {
         max-height: 90%;
     }
 
-    .app-body {
+    .content {
         padding: 0 1rem;
         width: 90%;
         max-width: 400px;
