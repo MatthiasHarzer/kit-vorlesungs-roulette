@@ -353,7 +353,7 @@ main.light .blur-background {
     height: auto;
 }
 
-.content h3,
+.app-body h3,
 .dialog h3 {
     font-size: 22px;
     font-weight: 400;
@@ -365,7 +365,7 @@ main.light .dialog-wrapper {
     background-color: var(--light-bg-color);
 }
 
-.dialog-wrapper .content {
+.dialog-wrapper .app-body {
     margin-top: 15px;
     width: 90%;
     height: 100%;
@@ -375,7 +375,7 @@ main.light .dialog-wrapper {
     position: relative;
 }
 
-.dialog-wrapper .content.centered {
+.dialog-wrapper .app-body.centered {
     display: flex;
     flex-flow: column;
     align-items: center;

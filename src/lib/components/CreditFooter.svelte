@@ -36,18 +36,16 @@
     .footer {
         border-top: 1px solid grey;
         padding: 0.5rem;
-        /*position: fixed;*/
+
         bottom: 0;
-        margin-top: auto;
+        /*margin-top: auto;*/
         color: #b2b2b2;
-        /*display: inline-flex;*/
-        /*flex-direction: column;*/
+
         font-size: 0.9rem;
         justify-content: space-between;
     }
 
     .footer > * {
-        /*margin: 0 0.5rem;*/
         display: block;
         flex-direction: column;
         align-items: center;

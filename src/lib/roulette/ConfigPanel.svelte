@@ -108,7 +108,7 @@
         max-height: 90%;
     }
 
-    .content {
+    .app-body {
         padding: 0 1rem;
         width: 90%;
         max-width: 400px;

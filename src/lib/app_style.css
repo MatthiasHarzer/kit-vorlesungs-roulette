@@ -7,22 +7,26 @@
     flex-direction: column;
 }
 
-.main.app-page .content {
+.main.app-page .app-body {
     position: relative;
     flex: 1;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
 }
-.main.app-page .content::-webkit-scrollbar {
-    width: 0.5rem;
+.main.app-page .app-body::-webkit-scrollbar {
+    width: 0.2rem;
 }
-.main.app-page .content::-webkit-scrollbar-track {
+.main.app-page .app-body::-webkit-scrollbar-track {
     background: #1e1e1e44;
 }
-.main.app-page .content::-webkit-scrollbar-thumb {
+.main.app-page .app-body::-webkit-scrollbar-thumb {
     background: #5c5c5c;
     border-radius: 10px;
+}
+
+.main.app-page .app-body .content{
+    flex: 1;
 }
 
 .main.app-page .app-bar {

@@ -3,11 +3,10 @@
     import LoadingEllipsis from "../components/LoadingEllipsis.svelte";
     import Event from "../components/Event.svelte";
     import ConfigPanel from "./ConfigPanel.svelte";
+    import * as util from "../util/util";
     import { format_date } from "../util/util";
     import { get_events } from "../event_handler";
     import type { KITEvent, KITTimeEventsConfig } from "../types";
-
-    import * as util from "../util/util";
     import { KITEventType } from "../types";
     import CreditFooter from "../components/CreditFooter.svelte";
     import "../app_style.css";
@@ -66,6 +65,11 @@
     const select_random_event = () => {
         // Selects a random event from the available events (without duplicates)
 
+        if (selected_event_index >= 0) {
+            clear_random_event();
+            return;
+        }
+
         if (remaining_indexes.length == 0) {
             remaining_indexes = [...available_indexes];
         }
@@ -98,69 +102,72 @@
     <div class="app-bar">
         <span class="title">KIT Vorlesungs Roulette</span>
     </div>
-    <div class="content">
-        <div class="config" on:click={open_config_panel}>
-            <div class="day text">
-                <span class="key"> Tag: </span>
-                <span class="value">
+    <div class="app-body">
+        <div class="content">
+            <div class="config" on:click={open_config_panel}>
+                <div class="day text">
+                    <span class="key"> Tag: </span>
+                    <span class="value">
                     {format_date(config.day, "#DDD#, #D#. #M#. #YYYY#")}
                 </span>
-            </div>
-            <div class="right">
-                <div class="time text">
-                    <span class="key"> Zeit: </span>
-                    <span class="value">
+                </div>
+                <div class="right">
+                    <div class="time text">
+                        <span class="key"> Zeit: </span>
+                        <span class="value">
                         {config.time} Uhr
                     </span>
+                    </div>
+                    <button
+                        class="material"
+                        on:click|stopPropagation={open_config_panel}
+                    >
+                        <span class="material-icons"> edit </span>
+                    </button>
                 </div>
-                <button
-                    class="material"
-                    on:click|stopPropagation={open_config_panel}
-                >
-                    <span class="material-icons"> edit </span>
-                </button>
             </div>
-        </div>
-        <hr />
-        {#await i_promise_events}
-            <div class="loading flex-center">
-                <h3>Loading</h3>
-                <LoadingEllipsis />
-            </div>
-        {:then events}
-            {#if events.length > 0}
-                <div class="events">
-                    {#each events as event}
-                        <Event
-                            {event}
-                            {config}
-                            index={events.indexOf(event)}
-                            selected={selected_event_index ===
+            <hr />
+            {#await i_promise_events}
+                <div class="loading flex-center">
+                    <h3>Loading</h3>
+                    <LoadingEllipsis />
+                </div>
+            {:then events}
+                {#if events.length > 0}
+                    <div class="events">
+                        {#each events as event}
+                            <Event
+                                {event}
+                                {config}
+                                index={events.indexOf(event)}
+                                selected={selected_event_index ===
                                 events.indexOf(event)}
-                        />
-                    {/each}
+                            />
+                        {/each}
+                    </div>
+                {:else}
+                    <div class="no-events flex-center">
+                        <h3>Keine Vorlesungen gefunden</h3>
+                    </div>
+                {/if}
+            {:catch error}
+                <div class="error-snippet">
+                    <p>{error}</p>
+                    <RetryButton on:click={fetch_events} />
                 </div>
-            {:else}
-                <div class="no-events flex-center">
-                    <h3>Keine Vorlesungen gefunden</h3>
-                </div>
-            {/if}
-        {:catch error}
-            <div class="error-snippet">
-                <p>{error}</p>
-                <RetryButton on:click={fetch_events} />
-            </div>
-        {/await}
-
-        <div class="fab-margin"></div>
+            {/await}
+        </div>
+        <div class="fab-position-wrapper">
+            <RouletteFab
+                events_promise={i_promise_events}
+                on:click={select_random_event}
+                visually_disabled={selected_event_index >= 0}
+            />
+        </div>
 
         <CreditFooter />
     </div>
 
-    <RouletteFab
-        events_promise={i_promise_events}
-        on:click={select_random_event}
-    />
 
     {#if config_panel_open}
         <ConfigPanel
@@ -171,11 +178,11 @@
     {/if}
 
     {#if selected_event_index >= 0}
-        <div
+        <button
             transition:fade={{ duration: 200 }}
-            class="dark-background"
+            class="clear dark-background"
             on:click|stopPropagation={clear_random_event}
-        ></div>
+        ></button>
     {/if}
 </div>
 
@@ -223,18 +230,13 @@
     }
 
     .events {
-        /*height: 100%;*/
-        width: 100%;
-
         position: relative;
-        /*top: 150px;*/
+        width: 100%;
 
         display: grid;
         grid-gap: 0;
         grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
         grid-auto-rows: 1fr;
-        /*grid-template-rows: minmax(100px, auto);*/
-        /*grid-auto-rows: 5px;*/
     }
 
     .dark-background {
@@ -247,10 +249,15 @@
         z-index: 1;
     }
 
-    .fab-margin {
-        height: 80px;
-        width: 100%;
-        position: relative;
+    .fab-position-wrapper {
+        position: sticky;
+        bottom: 0;
         flex: 0 0 auto;
+
+        display: flex;
+        justify-content: flex-end;
+        padding: 10px;
+        z-index: 9999;
+        /*margin-top: auto;*/
     }
 </style>

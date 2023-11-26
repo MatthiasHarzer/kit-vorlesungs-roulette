@@ -20,8 +20,8 @@
         try {
             return cached_rooms_raw
                 ? JSON.parse(cached_rooms_raw).map(
-                      (r) => new KITRoom(r.id, r.name),
-                  )
+                    (r) => new KITRoom(r.id, r.name),
+                )
                 : null;
         } catch (e) {
             return null;
@@ -101,73 +101,75 @@
     <div class="app-bar">
         <span class="title">KIT Room Event Search</span>
     </div>
-    <div class="content">
-        <div class="config">
-            <div class="day-select">
-                <DaySelect bind:date={config.day} />
-            </div>
-            {#if config.rooms.length > 0}
-                <div class="selected-rooms-header">
-                    <span>Ausgewählte Räume</span>
+    <div class="app-body">
+        <div class="content">
+            <div class="config">
+                <div class="day-select">
+                    <DaySelect bind:date={config.day} />
                 </div>
-                <div class="selected-rooms">
-                    {#each config.rooms as room}
-                        <div class="selected-room">
-                            <span>{room.name}</span>
-                            <button
-                                class="material"
-                                on:click={() => on_remove_room_click(room)}
-                            >
-                                <span class="material-icons"> close </span>
-                            </button>
-                        </div>
-                    {/each}
-                </div>
-            {/if}
-            <div class="room-search">
-                <input
-                    bind:value={room_search_term}
-                    placeholder="Raum suchen..."
-                    type="text"
-                />
-                {#if auto_complete_items.length > 0}
-                    <div class="auto-complete box-shadow">
-                        {#each auto_complete_items as item}
-                            <div
-                                class="auto-complete-item"
-                                on:click={() => on_room_click(item)}
-                            >
-                                <span>{item.name}</span>
+                {#if config.rooms.length > 0}
+                    <div class="selected-rooms-header">
+                        <span>Ausgewählte Räume</span>
+                    </div>
+                    <div class="selected-rooms">
+                        {#each config.rooms as room}
+                            <div class="selected-room">
+                                <span>{room.name}</span>
+                                <button
+                                    class="material"
+                                    on:click={() => on_remove_room_click(room)}
+                                >
+                                    <span class="material-icons"> close </span>
+                                </button>
                             </div>
                         {/each}
                     </div>
                 {/if}
+                <div class="room-search">
+                    <input
+                        bind:value={room_search_term}
+                        placeholder="Raum suchen..."
+                        type="text"
+                    />
+                    {#if auto_complete_items.length > 0}
+                        <div class="auto-complete box-shadow">
+                            {#each auto_complete_items as item}
+                                <div
+                                    class="auto-complete-item"
+                                    on:click={() => on_room_click(item)}
+                                >
+                                    <span>{item.name}</span>
+                                </div>
+                            {/each}
+                        </div>
+                    {/if}
+                </div>
             </div>
+            <!--        <hr/>-->
+            {#await i_promise_events}
+                <div class="loading flex-center">
+                    <h3>Loading</h3>
+                    <LoadingEllipsis />
+                </div>
+            {:then events}
+                {#if events.length > 0}
+                    <div class="events">
+                        {#each events as event}
+                            <Event {event} {config} index={events.indexOf(event)} />
+                        {/each}
+                    </div>
+                {:else}
+                    <div class="no-events flex-center">
+                        <h3>Keine Vorlesungen gefunden</h3>
+                    </div>
+                {/if}
+            {:catch error}
+                <div class="error-snippet">
+                    <p>{error}</p>
+                    <RetryButton on:click={fetch_events} />
+                </div>
+            {/await}
         </div>
-        <!--        <hr/>-->
-        {#await i_promise_events}
-            <div class="loading flex-center">
-                <h3>Loading</h3>
-                <LoadingEllipsis />
-            </div>
-        {:then events}
-            {#if events.length > 0}
-                <div class="events">
-                    {#each events as event}
-                        <Event {event} {config} index={events.indexOf(event)} />
-                    {/each}
-                </div>
-            {:else}
-                <div class="no-events flex-center">
-                    <h3>Keine Vorlesungen gefunden</h3>
-                </div>
-            {/if}
-        {:catch error}
-            <div class="error-snippet">
-                <p>{error}</p>
-                <RetryButton on:click={fetch_events} />
-            </div>
-        {/await}
         <CreditFooter />
     </div>
 </div>

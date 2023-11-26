@@ -5,6 +5,7 @@
     import { fade } from "svelte/transition";
 
     export let events_promise: Promise<any[]>;
+    export let visually_disabled: boolean = false;
 
     const dispatch = createEventDispatcher();
 
@@ -33,13 +34,16 @@
     };
 </script>
 
-<div class="fab-wrapper">
+<button
+    class="floating-action-button clear flex-center box-shadow"
+    class:highlighted={show_intro}
+    class:visually-disabled={visually_disabled}
+    on:click={click}
+>
+    <span class="material-icons-outlined">casino</span>
+
     {#if show_intro}
-        <div
-            transition:fade={{ duration: 200 }}
-            class="fab-intro"
-            on:click={hide_intro}
-        >
+        <div class="fab-intro">
             <img class="arrow" src={arrow} alt="->" height="214" width="488" />
             <img
                 class="arrow2"
@@ -51,14 +55,22 @@
             <div class="text">Zufällige Vorlesung auswählen</div>
         </div>
     {/if}
+
+</button>
+
+{#if show_intro}
     <button
-        class="floating-action-button clear flex-center box-shadow"
-        class:highlighted={show_intro}
-        on:click={click}
+        transition:fade={{ duration: 200 }}
+        class="clear fab-intro-background"
+        on:click={hide_intro}
     >
-        <span class="material-icons-outlined">casino</span>
+
     </button>
-</div>
+{/if}
+
+
+
+
 
 <style>
     .fab-wrapper {
@@ -71,9 +83,9 @@
     }
 
     .floating-action-button {
-        position: absolute;
-        bottom: 50px;
-        right: 10px;
+        position: relative;
+        border: 1px solid #404249;
+        /*box-shadow: 0 0 10px 1px #161718;;*/
         background-color: #1b1e27;
         border-radius: 50%;
         margin: 0;
@@ -84,6 +96,7 @@
         font-size: 1.7rem;
         pointer-events: all;
         z-index: 9999;
+
     }
     .floating-action-button.highlighted {
         /*z-index: 9999;*/
@@ -92,8 +105,14 @@
         box-shadow: 0 0 14px 6px rgba(255, 170, 0, 0.9);
     }
 
-    .fab-intro {
-        position: absolute;
+    .floating-action-button.visually-disabled{
+        filter: brightness(0.5);
+    }
+
+    .fab-intro-background {
+        position: fixed;
+        top: 0;
+        left: 0;
         width: 100%;
         height: 100%;
 
@@ -101,23 +120,27 @@
         pointer-events: all;
     }
 
+    .fab-intro{
+        overflow: hidden;
+    }
+
     .fab-intro .arrow {
         position: absolute;
-        bottom: 40px;
-        right: 110px;
+        bottom: 10px;
+        right: 60px;
         width: 150px;
         height: 100px;
-        rotate: 20deg;
+        rotate: 40deg;
         z-index: 1;
         pointer-events: none;
     }
     .fab-intro .arrow2 {
         position: absolute;
-        bottom: 160px;
-        right: 60px;
+        bottom: 120px;
+        right: -10px;
         width: 150px;
         height: 100px;
-        rotate: 90deg;
+        rotate: 110deg;
         z-index: 1;
         pointer-events: none;
         filter: saturate(0.5) brightness(1.4);
@@ -125,7 +148,7 @@
     .fab-intro .text {
         position: absolute;
         bottom: 200px;
-        right: 200px;
+        right: 120px;
         /*width: 300px;*/
         height: 100px;
         z-index: 1;
