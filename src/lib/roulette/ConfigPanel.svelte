@@ -113,12 +113,20 @@
 
     .dialog {
         max-height: 90%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .header, .footer{
+        flex: 0 0 auto;
     }
 
     .content {
         padding: 0 1rem;
         width: 90%;
         max-width: 400px;
+        flex: 1 1 auto;
+        overflow: auto;
     }
 
     .item {
