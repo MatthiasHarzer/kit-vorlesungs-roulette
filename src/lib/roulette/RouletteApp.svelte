@@ -176,6 +176,7 @@
                 class="scroll-up-button box-shadow"
                 class:b-hidden={scroll_up_hidden}
                 on:click={scroll_up}
+                disabled={selected_event_index >= 0}
             >
                 <span class="material-icons"> keyboard_arrow_up </span>
             </button>
@@ -296,6 +297,10 @@
         scale: 1;
         transition: scale 0.2s ease-in-out;
         pointer-events: all;
+    }
+    .scroll-up-button:disabled{
+        pointer-events: none;
+        filter: brightness(0.5);
     }
 
     .scroll-up-button.b-hidden {
