@@ -254,6 +254,8 @@
         bottom: 0;
         flex: 0 0 auto;
 
+        pointer-events: none;
+
         display: flex;
         justify-content: flex-end;
         padding: 10px;
