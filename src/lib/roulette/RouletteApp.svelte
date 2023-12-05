@@ -11,7 +11,11 @@
     import CreditFooter from "../components/CreditFooter.svelte";
     import "../app_style.css";
     import RetryButton from "../components/RetryButton.svelte";
-    import RouletteFab from "./RandomizeFab.svelte";
+    import RandomizeFab from "./RandomizeFab.svelte";
+    import { onMount } from "svelte";
+
+    let app_body: HTMLElement;
+    let scroll_up_hidden = true;
 
     const default_time = util.get_nearest_time_from_now();
     let date = new Date();
@@ -34,6 +38,16 @@
             (type) =>
                 type != null && Object.values(KITEventType).includes(type),
         ),
+    };
+
+    onMount(() => {
+        app_body.addEventListener("scroll", () => {
+            scroll_up_hidden = app_body.scrollTop < 100;
+        });
+    });
+
+    const scroll_up = () => {
+        app_body.scrollTo({ top: 0, behavior: "smooth" });
     };
 
     const resets_indexes = () => {
@@ -102,21 +116,21 @@
     <div class="app-bar">
         <span class="title">KIT Vorlesungs Roulette</span>
     </div>
-    <div class="app-body">
+    <div class="app-body" bind:this={app_body}>
         <div class="content">
             <div class="config" on:click={open_config_panel}>
                 <div class="day text">
                     <span class="key"> Tag: </span>
                     <span class="value">
-                    {format_date(config.day, "#DDD#, #D#. #M#. #YYYY#")}
-                </span>
+                        {format_date(config.day, "#DDD#, #D#. #M#. #YYYY#")}
+                    </span>
                 </div>
                 <div class="right">
                     <div class="time text">
                         <span class="key"> Zeit: </span>
                         <span class="value">
-                        {config.time} Uhr
-                    </span>
+                            {config.time} Uhr
+                        </span>
                     </div>
                     <button
                         class="material"
@@ -141,7 +155,7 @@
                                 {config}
                                 index={events.indexOf(event)}
                                 selected={selected_event_index ===
-                                events.indexOf(event)}
+                                    events.indexOf(event)}
                             />
                         {/each}
                     </div>
@@ -158,7 +172,14 @@
             {/await}
         </div>
         <div class="fab-position-wrapper">
-            <RouletteFab
+            <button
+                class="scroll-up-button box-shadow"
+                class:b-hidden={scroll_up_hidden}
+                on:click={scroll_up}
+            >
+                <span class="material-icons"> keyboard_arrow_up </span>
+            </button>
+            <RandomizeFab
                 events_promise={i_promise_events}
                 on:click={select_random_event}
                 visually_disabled={selected_event_index >= 0}
@@ -167,7 +188,6 @@
 
         <CreditFooter />
     </div>
-
 
     {#if config_panel_open}
         <ConfigPanel
@@ -257,9 +277,29 @@
         pointer-events: none;
 
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
+        align-items: center;
+
         padding: 10px;
         z-index: 9999;
         /*margin-top: auto;*/
+    }
+
+    .scroll-up-button {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+
+        border: 1px solid #404249;
+        background-color: #1b1e27;
+
+        scale: 1;
+        transition: scale 0.2s ease-in-out;
+        pointer-events: all;
+    }
+
+    .scroll-up-button.b-hidden {
+        pointer-events: none;
+        scale: 0;
     }
 </style>

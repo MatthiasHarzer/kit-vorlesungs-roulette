@@ -55,7 +55,6 @@
             <div class="text">Zufällige Vorlesung auswählen</div>
         </div>
     {/if}
-
 </button>
 
 {#if show_intro}
@@ -64,24 +63,10 @@
         class="clear fab-intro-background"
         on:click={hide_intro}
     >
-
     </button>
 {/if}
 
-
-
-
-
 <style>
-    .fab-wrapper {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-    }
-
     .floating-action-button {
         position: relative;
         border: 1px solid #404249;
@@ -96,7 +81,6 @@
         font-size: 1.7rem;
         pointer-events: all;
         z-index: 9999;
-
     }
     .floating-action-button.highlighted {
         /*z-index: 9999;*/
@@ -105,7 +89,7 @@
         box-shadow: 0 0 14px 6px rgba(255, 170, 0, 0.9);
     }
 
-    .floating-action-button.visually-disabled{
+    .floating-action-button.visually-disabled {
         filter: brightness(0.5);
     }
 
@@ -120,7 +104,7 @@
         pointer-events: all;
     }
 
-    .fab-intro{
+    .fab-intro {
         overflow: hidden;
     }
 
