@@ -13,6 +13,7 @@
     import RetryButton from "../components/RetryButton.svelte";
     import RandomizeFab from "./RandomizeFab.svelte";
     import { onMount } from "svelte";
+    import { pageIndex } from "../page_index";
 
     let app_body: HTMLElement;
     let scroll_up_hidden = true;
@@ -110,6 +111,11 @@
         localStorage.setItem("types", JSON.stringify(config.types));
         close_config_panel();
     };
+
+    const randomize_intro_shown = () => {
+        $pageIndex = 0; // Go to roulette page
+        close_config_panel();
+    };
 </script>
 
 <div class="main app-page">
@@ -182,6 +188,7 @@
             </button>
             <RandomizeFab
                 events_promise={i_promise_events}
+                on:intro_shown={randomize_intro_shown}
                 on:click={select_random_event}
                 visually_disabled={selected_event_index >= 0}
             />
@@ -298,7 +305,7 @@
         transition: scale 0.2s ease-in-out;
         pointer-events: all;
     }
-    .scroll-up-button:disabled{
+    .scroll-up-button:disabled {
         pointer-events: none;
         filter: brightness(0.5);
     }
