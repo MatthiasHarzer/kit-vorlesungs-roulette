@@ -3,31 +3,30 @@
     import RouletteApp from "./lib/roulette/RouletteApp.svelte";
     import PageSlider from "./lib/components/slider/PageSlider.svelte";
     import type { Page } from "./lib/components/slider/page";
+    import { pageIndex } from "./lib/page_index";
 
     const pages: Page[] = [
         {
             title: "Roulette",
+            // @ts-ignore
             component: RouletteApp,
             icon: "casino",
         },
         {
             title: "Room Events",
+            // @ts-ignore
             component: RoomEventsApp,
             icon: "event",
         },
     ];
-
-    let current_page_index =
-        JSON.parse(localStorage.getItem("current_page_index") || "null") ?? 0;
-
-    $: localStorage.setItem(
-        "current_page_index",
-        JSON.stringify(current_page_index),
-    );
 </script>
 
 <main>
-    <PageSlider bind:current_page_index {pages} show_navigation={true} />
+    <PageSlider
+        bind:current_page_index={$pageIndex}
+        {pages}
+        show_navigation={true}
+    />
 </main>
 
 <style>

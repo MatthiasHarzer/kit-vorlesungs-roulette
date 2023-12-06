@@ -3,6 +3,7 @@
     import arrow from "../../assets/imgs/arrow.png";
     import arrow2 from "../../assets/imgs/arrow2.png";
     import { fade } from "svelte/transition";
+    import { pageIndex } from "../page_index";
 
     export let events_promise: Promise<any[]>;
     export let visually_disabled: boolean = false;
@@ -18,6 +19,7 @@
                 if (events.length > 0 && !intro_was_shown) {
                     show_intro = true;
                     intro_was_shown = true;
+                    $pageIndex = 0;
                 }
             }, 5000);
         });
