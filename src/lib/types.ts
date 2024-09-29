@@ -18,20 +18,6 @@ export interface KITExtendedSearchFormData {
     room: string;
 }
 
-/**
- * The body for the cors proxy server request.
- * @see https://github.com/MatthiasHarzer/minimal-cors-server
- */
-export interface CorsProxyBody {
-    method: "POST" | "GET" | "PUT" | "DELETE";
-    url: string;
-    headers?: object;
-    body?: string;
-    data?: object;
-    cache?: boolean;
-    max_age?: number;
-}
-
 // noinspection SpellCheckingInspection
 /**
  * The KIT event type.
@@ -266,6 +252,5 @@ export interface RawRoom {
 export interface RequestParams {
     form_data?: KITExtendedSearchFormData;
     headers?: object;
-    cache?: boolean;
     max_age?: number;
 }

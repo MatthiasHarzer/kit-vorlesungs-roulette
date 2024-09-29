@@ -1,6 +1,6 @@
 const KIT_BASE_URL = "https://campus.kit.edu";
 
-export const CORS_PROXY_SERVER = "https://cors.taptwice.dev/";
+export const CORS_PROXY_SERVER = import.meta.env.VITE_CORS_PROXY_SERVER_URL;
 export const EXTENDED_SEARCH_BASE_URL = `${KIT_BASE_URL}/sp/campus/all/extendedSearch.asp`;
 export const TERMS_URL = `${KIT_BASE_URL}/sp/server/services/kit/terms.asp`;
 export const ROOMS_QUICK_SEARCH_URL = `${KIT_BASE_URL}/sp/server/services/kit/quicksearch.asp?type=room&find=`;

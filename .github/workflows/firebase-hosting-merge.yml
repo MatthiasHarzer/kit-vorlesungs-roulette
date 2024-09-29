@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      VITE_PUBLIC_KIT_API_KEY: '${{ secrets.VITE_PUBLIC_KIT_API_KEY }}'
+      VITE_CORS_PROXY_SERVER_URL: '${{ vars.VITE_CORS_PROXY_SERVER_URL }}'
 
     steps:
       - uses: actions/checkout@v2

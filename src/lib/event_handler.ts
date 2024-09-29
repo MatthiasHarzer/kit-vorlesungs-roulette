@@ -1,6 +1,5 @@
-import { format_date } from "./util/util";
+import { format_date, json_to_encoded_form_data } from "./util/util";
 import type {
-    CorsProxyBody,
     KITEvent,
     KITExtendedSearchFormData,
     KITRoomEventsConfig,
@@ -33,7 +32,6 @@ let current_room_fetch_id = 0;
 
 const i_promise_terms = new Promise<Term[]>((resolve, reject) => {
     make_request(TERMS_URL, {
-        cache: true,
         max_age: 60 * 60 * 24, // 1 day
     })
         .then((response) => response.json())
@@ -81,28 +79,25 @@ const get_form_data_template = async (
  * @param params The parameters for the request.
  * @returns The response.
  *
- * @see https://github.com/MatthiasHarzer/minimal-cors-server
+ * @see https://github.com/MatthiasHarzer/simple-proxy-server
  */
 function make_request(
     url: string,
     params: RequestParams = {},
 ): Promise<Response> {
-    const { form_data, headers, cache, max_age } = params;
-    const body: CorsProxyBody = {
-        method: "POST",
-        url: url,
-        data: form_data,
-        headers: headers,
-        cache: cache ?? true,
-        max_age: max_age ?? 0,
-    };
+    const { form_data, headers, max_age } = params;
 
-    return fetch(CORS_PROXY_SERVER, {
+    const proxy_url = `${CORS_PROXY_SERVER}/cache/max-age:${
+        max_age ?? 0
+    }/${url}`;
+
+    return fetch(proxy_url, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json",
+            ...headers,
+            "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: JSON.stringify(body),
+        body: json_to_encoded_form_data(form_data),
     });
 }
 
@@ -120,7 +115,6 @@ export const get_events = async (
 
     const response = await make_request(EXTENDED_SEARCH_BASE_URL, {
         form_data: json_form_data,
-        cache: true,
         max_age: 60 * 60 * 24 * 3, // 3 days
     });
     const text = await response.text();
@@ -151,7 +145,6 @@ export const get_room_events = async (
 
     const response = await make_request(EXTENDED_SEARCH_BASE_URL, {
         form_data: json_form_data,
-        cache: true,
         max_age: 60 * 60 * 24 * 3, // 3 days
     });
     const text = await response.text();
@@ -174,7 +167,6 @@ export const find_rooms = async (
     let fetch_id = ++current_room_fetch_id;
     const query_url = `${ROOMS_QUICK_SEARCH_URL}${search_term}`;
     const response = await make_request(query_url, {
-        cache: true,
         max_age: 60 * 60 * 24 * 7 * 4, // 4 weeks
     });
 

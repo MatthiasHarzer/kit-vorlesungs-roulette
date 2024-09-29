@@ -160,3 +160,17 @@ export const time_to_total_seconds = (time: string): number => {
     const [hours, minutes] = time.split(":");
     return parseInt(hours) * 60 * 60 + parseInt(minutes) * 60;
 };
+
+export const json_to_encoded_form_data = (
+    json: Record<string, any>,
+): string => {
+    const encodedPairs: string[] = [];
+    for (const key in json) {
+        if (json.hasOwnProperty(key)) {
+            const encodedKey = encodeURIComponent(key);
+            const encodedValue = encodeURIComponent(json[key]);
+            encodedPairs.push(`${encodedKey}=${encodedValue}`);
+        }
+    }
+    return encodedPairs.join("&");
+};
