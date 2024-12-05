@@ -5,7 +5,7 @@ export const EXTENDED_SEARCH_BASE_URL = `${KIT_BASE_URL}/sp/campus/all/extendedS
 export const TERMS_URL = `${KIT_BASE_URL}/sp/server/services/kit/terms.asp`;
 export const ROOMS_QUICK_SEARCH_URL = `${KIT_BASE_URL}/sp/server/services/kit/quicksearch.asp?type=room&find=`;
 
-export const ROOMS_SEARCH_URL = `${KIT_BASE_URL}/search.php#!campus/all/search.asp?searchtype=room&searchterm=`;
+export const ROOMS_SEARCH_URL = `https://campus.studium.kit.edu/search.php#!campus/all/search.asp?searchtype=room&searchterm=`;
 
 export const KIT_UID_REGEX = /0x[0-9a-fA-F]{32}/;
 export const KIT_CMS_BASE_EVENT_URL = `${KIT_BASE_URL}/sp/campus/all/event.asp?gguid=`;

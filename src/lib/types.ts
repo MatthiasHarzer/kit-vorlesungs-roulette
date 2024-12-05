@@ -104,7 +104,7 @@ export class KITRoom {
             search_term = this.name.substring(KITRoom.BUILDING_PREFIX.length);
         }
 
-        return `${ROOMS_SEARCH_URL}${search_term}}`;
+        return `${ROOMS_SEARCH_URL}${search_term}`;
     }
 
     constructor(id: string, name: string) {
